@@ -1,11 +1,11 @@
 export const NAV_LINKS = [
-  { href: "#home", label: "Beranda" },
-  { href: "#tentang", label: "About Me" },
-  { href: "#jadwal-shalat", label: "Jadwal Shalat" },
-  { href: "#kegiatan", label: "Kegiatan" },
-  { href: "#info", label: "Info Pondok" },
-  { href: "#galeri", label: "Galeri" },
-  { href: "#kontak", label: "Kontak" },
+  { href: "/#home", label: "Beranda" },
+  { href: "/#tentang", label: "About Me" },
+  { href: "/#jadwal-shalat", label: "Jadwal Shalat" },
+  { href: "/artikel", label: "Artikel" },
+  { href: "/#kegiatan", label: "Kegiatan" },
+  { href: "/#galeri", label: "Galeri" },
+  { href: "/#kontak", label: "Kontak" },
 ] as const;
 
 export const BIODATA = [

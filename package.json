@@ -7,13 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:setup": "node scripts/run-schema.mjs"
+    "db:setup": "node scripts/run-schema.mjs",
+    "db:migrate:articles": "node scripts/apply-migration.mjs supabase/migrations/add_articles.sql"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",
+    "@uiw/react-md-editor": "^4.1.1",
+    "iron-session": "^8.0.4",
     "next": "15.2.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "slugify": "^1.6.9"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",

@@ -6,6 +6,8 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+export type ArticleStatus = "draft" | "published";
+
 export type Database = {
   public: {
     Tables: {
@@ -60,10 +62,63 @@ export type Database = {
         };
         Relationships: [];
       };
+      articles: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          excerpt: string | null;
+          content: string;
+          cover_image: string | null;
+          tags: string[];
+          status: ArticleStatus;
+          author_name: string;
+          meta_title: string | null;
+          meta_description: string | null;
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          excerpt?: string | null;
+          content?: string;
+          cover_image?: string | null;
+          tags?: string[];
+          status?: ArticleStatus;
+          author_name?: string;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          title?: string;
+          excerpt?: string | null;
+          content?: string;
+          cover_image?: string | null;
+          tags?: string[];
+          status?: ArticleStatus;
+          author_name?: string;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
-    Enums: Record<string, never>;
+    Enums: {
+      article_status: ArticleStatus;
+    };
     CompositeTypes: Record<string, never>;
   };
 };
