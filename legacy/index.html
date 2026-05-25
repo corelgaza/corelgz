@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santri Journey: Sukahideng | Kehidupan di Pesantren</title>
+    <meta name="description"
+        content="Mengintip kehidupan sehari-hari, jadwal belajar, dan pengalaman unik di pesantren.">
+    <meta name="theme-color" content="#1B4332">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+    <!-- Open Graph Meta Tags untuk Share WA/Medsos -->
+    <meta property="og:title" content="Santri Journey | Kehidupan Seru di Pesantren">
+    <meta property="og:description"
+        content="Kuy kepoin cerita seru, jadwal padat, dan galeri estetik gue selama mondok bareng temen-temen!">
+    <meta property="og:image" content="images/pondok1.webp">
+    <!-- Ganti dengan URL absolut foto terbaikmu saat online -->
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="images/hero-bg.jpg" as="image">
+</head>
+
+<body>
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <img src="favicon.svg" alt="" class="logo-icon" width="28" height="28">
+                <span>Santri Journey</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#tentang">About Me</a></li>
+                <li><a href="#kegiatan">Kegiatan</a></li>
+                <li><a href="#info">Info Pondok</a></li>
+                <li><a href="#galeri">Galeri</a></li>
+                <li><a href="#kontak">Kontak</a></li>
+                <li><button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark Mode">🌙</button></li>
+            </ul>
+            <button class="hamburger" aria-label="Menu" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero">
+        <div id="particles-container"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+            <h1>Santri Journey: <span>Sukahideng</span></h1>
+            <p id="typewriter" class="typing-text"
+                data-text="Cerita seru, petualangan, dan secuil kisah gue selama mondok bareng temen-temen."></p>
+            <a href="#tentang" class="btn-primary">Kuy, Kepoin!</a>
+        </div>
+    </header>
+
+    <!-- Tentang Saya Section -->
+    <section id="tentang" class="about">
+        <div class="container">
+            <h2 class="section-title reveal">About Me</h2>
+            <div class="about-grid reveal">
+                <div class="about-text">
+                    <h3>Halo Semuanya! 👋</h3>
+                    <p>Kenalin, gue Corel. Barudak Sukahideng mah pasti udah pada kenal lah ya, hehe. Sekarang gue lagi
+                        asik mondok nih. Serius deh, ngabisin masa muda di pesantren tuh pengalaman berharga yang nggak
+                        bakal gue sesalin. Di sini gue nggak cuma belajar ngaji, tapi juga belajar mandiri, hidup
+                        sederhana, dan pastinya dapet banyak banget temen asik.</p>
+                    <p>Awalnya sih jujur berat banget ya pisah dari ortu. Tapi lama-lama, temen-temen santri di sini
+                        udah kayak keluarga sendiri. Mulai dari kebangun sahur bareng, setoran hafalan Al-Qur'an, sampai
+                        cerita-cerita receh sebelum tidur, haha.</p>
+                </div>
+                <div class="about-card">
+                    <h4>Biodata Singkat</h4>
+                    <ul>
+                        <li><strong>Nama Lengkap:</strong> Corel Rambu Gaza Wiwoho</li>
+                        <li><strong>Nama Panggilan:</strong> Corel</li>
+                        <li><strong>Tempat, Tgl Lahir:</strong> Pati, 15 Juni 2010</li>
+                        <li><strong>Hobi:</strong> Badminton</li>
+                        <li><strong>Cita-cita:</strong> Businessman</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quotes Section -->
+    <section id="quotes" class="quotes-section">
+        <div class="container reveal">
+            <blockquote class="islamic-quote">
+                "Pentingnya ilmu yang bermanfaat bagi dunia-akhirat serta menjaga silaturahmi yang erat antara alumni
+                dan pesantren."
+                <cite>— Drs. KH. Ii Abdul Basith Wahab</cite>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Kegiatan Saya Section -->
+    <section id="kegiatan" class="activities bg-light">
+        <div class="container">
+            <h2 class="section-title reveal">Daily Routine Gue</h2>
+            <p class="section-subtitle reveal">Meskipun jadwalnya lumayan padat, tapi seru kok! Penasaran ngapain aja
+                seharian di pondok? Cekidot!</p>
+
+            <div class="timeline reveal">
+                <div class="timeline-item">
+                    <div class="time">03:30 - 06:00</div>
+                    <div class="content">
+                        <h4>Shalat Subuh dan Ngaji 🕌📖</h4>
+                        <p>Bangun pagi buta buat siap-siap shalat subuh berjamaah. Habis wiridan, lanjut ke sesi yang
+                            jujur paling bikin ngantuk: ngaji subuh! Tapi ya harus tetep semangat buat ngejar berkah.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">06:00 - 06:30</div>
+                    <div class="content">
+                        <h4>Persiapan Sekolah 🚿👕</h4>
+                        <p>Beres ngaji subuh, waktunya balik ke asrama buat mandi, rapi-rapi, nyetrika seragam, dan
+                            nyiapin mental buat berangkat sekolah.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">06:30 - 12:30</div>
+                    <div class="content">
+                        <h4>Mode Anak Sekolah On! 🎒📚</h4>
+                        <p>Full kegiatan belajar ngikutin kurikulum sekolah. Shalat Dzuhur dan istirahat siang juga
+                            dilakuin bareng temen-temen di area sekolah.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">12:30 - 17:00</div>
+                    <div class="content">
+                        <h4>Persiapan Shalat Ashar dan Ngaji 🌅📖</h4>
+                        <p>Pulang sekolah rebahan bentar (kalo sempet), terus langsung siap-siap buat jamaah shalat
+                            Ashar. Habis itu gas ngaji sore lagi bareng ustaz.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">18:10 - 21:30</div>
+                    <div class="content">
+                        <h4>Maghrib, Isya', & Ngaji 🌙🕋</h4>
+                        <p>Jadwal non-stop! Habis jamaah Maghrib langsung nyambung ngaji bareng, terus ditutup dengan
+                            shalat Isya berjamaah.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">22:00 - 22:30</div>
+                    <div class="content">
+                        <h4>Menghafal Al-Qur'an dan Pengajian Malam 🧠✨</h4>
+                        <p>Waktunya kumpul di kobong (kamar) bareng temen-temen buat setor hafalan dan ngaji Al-Qur'an.
+                            Vibesnya berisik, seru, tapi tetep asik.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">23:00 - 03:30</div>
+                    <div class="content">
+                        <h4>Molor Time! 😴🛌</h4>
+                        <p>Akhirnya bisa rebahan dan tidur juga! Istirahat total abis seharian digempur jadwal padet
+                            merayap (apa lagi ngajinya hahaha). <i>Charge</i> energi buat besok!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Pesantren Section -->
+    <section id="info" class="info-pesantren bg-light">
+        <div class="container">
+            <h2 class="section-title reveal">Info Pesantren</h2>
+            <p class="section-subtitle reveal">Sekilas tentang Pondok Pesantren Sukahideng tempat gue nyantri.</p>
+
+            <div class="faq-container reveal">
+                <!-- Info Item 1 (Sejarah) -->
+                <div class="faq-item">
+                    <button class="faq-question">🏛️ Sejarah Pondok Pesantren Sukahideng <span
+                            class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Pondok Pesantren Sukahideng, yang berlokasi di Sukarame, Tasikmalaya, didirikan pada tahun
+                            1922 M (1341 H) oleh KH Zainal Muhsin. Pesantren ini lahir pada masa penjajahan Belanda dan
+                            tumbuh menjadi pusat pendidikan Islam yang memadukan pengajaran kitab kuning dengan sistem
+                            pendidikan modern, serta dikenal sebagai salah satu pesantren berpengaruh di Jawa Barat.</p>
+                        <ul class="faq-list faq-list-bottom">
+                            <li><strong>Pendiri:</strong> Didirikan oleh KH Zainal Muhsin, seorang tokoh ulama
+                                karismatik.</li>
+                            <li><strong>Tahun Berdiri:</strong> Berdiri pada tahun 1922 M bertepatan dengan 1341 H, masa
+                                di mana perjuangan melawan penjajah Belanda masih gencar dilakukan.</li>
+                            <li><strong>Latar Belakang:</strong> Awalnya berdiri sebagai pusat pengajaran agama Islam
+                                tradisional (Salafiyah) untuk mencetak kader ulama.</li>
+                            <li><strong>Perkembangan:</strong> Dalam perjalanannya, terutama di bawah asuhan generasi
+                                penerus KH Zainal Muhsin, seperti KH A. Wahab Muhsin, pesantren ini mengadopsi sistem
+                                pendidikan klasikal dan mendirikan berbagai lembaga pendidikan formal (seperti MTs, MA).
+                            </li>
+                            <li><strong>Nama Resmi:</strong> Saat ini dikenal dengan nama Lembaga Pendidikan Pondok
+                                Pesantren Sukahideng atau Pondok Pesantren Perguruan K.H.Z. Musthafa Sukahideng.</li>
+                        </ul>
+                        <p>Pesantren ini terus konsisten menanamkan nilai-nilai keislaman, kebangsaan, disiplin, dan
+                            kemandirian.</p>
+                    </div>
+                </div>
+                <!-- Info Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-question">📚 Program Pendidikan <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Program pendidikan Pondok Pesantren Sukahideng di Tasikmalaya memadukan kajian kitab kuning
+                            tradisional dengan pendidikan formal (kurikulum nasional) serta asrama 24 jam. Santri
+                            dibekali ilmu agama dan umum melalui MTs/SMK KH. A. Wahab Muhsin, SMP/SMA KH. Zainal
+                            Musthafa, atau sekolah negeri terdekat (MTsN/MAN).</p>
+
+                        <h4 class="faq-subtitle">Pendidikan Formal (Terpadu):</h4>
+                        <ul class="faq-list">
+                            <li>MTs KH. A. Wahab Muhsin</li>
+                            <li>SMK KH. A. Wahab Muhsin</li>
+                            <li>SMP KH. Zainal Musthafa</li>
+                            <li>SMA KH. Zainal Musthafa</li>
+                            <li>Bekerja sama dengan MTsN 1 Tasikmalaya dan MAN 1 Tasikmalaya.</li>
+                        </ul>
+
+                        <h4 class="faq-subtitle">Pendidikan Pesantren (Khas):</h4>
+                        <ul class="faq-list faq-list-bottom">
+                            <li>Kajian kitab kuning (tafaqquh fiddin).</li>
+                            <li>Pembiasaan shalat berjamaah, tahajjud, dan dhuha.</li>
+                            <li>Pengembangan bahasa Arab dan Inggris.</li>
+                            <li>Hafalan Al-Qur'an / Juz Amma.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Info Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-question">🕌 Fasilitas Lengkap <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Pondok Pesantren Sukahideng di Tasikmalaya, Jawa Barat, menyediakan fasilitas pendidikan dan
+                            asrama yang lengkap untuk mendukung lingkungan belajar santri. Fasilitas utamanya meliputi
+                            area ibadah, gedung asrama, ruang kelas, serta fasilitas penunjang untuk mendukung
+                            kedisiplinan dan aktivitas harian santri. Berikut adalah fasilitas lengkap di Ponpes
+                            Sukahideng:</p>
+
+                        <h4 class="faq-subtitle">Fasilitas Pendidikan:</h4>
+                        <ul class="faq-list">
+                            <li>MTs KH. A. Wahab Muhsin</li>
+                            <li>SMK KH. A. Wahab Muhsin</li>
+                            <li>SMP KH. Zainal Musthafa</li>
+                            <li>SMA KH. Zainal Musthafa</li>
+                            <li>MTsN 1 Tasikmalaya (integrasi)</li>
+                            <li>MAN 1 Tasikmalaya (integrasi)</li>
+                        </ul>
+
+                        <h4 class="faq-subtitle">Fasilitas Ibadah & Pembelajaran:</h4>
+                        <ul class="faq-list">
+                            <li>Masjid / Musholla Utama untuk shalat berjamaah</li>
+                            <li>Ruang Kelas untuk kajian kitab kuning dan pembelajaran formal</li>
+                            <li>Area menghafal bersama di asrama</li>
+                        </ul>
+
+                        <h4 class="faq-subtitle">Fasilitas Asrama & Umum:</h4>
+                        <ul class="faq-list">
+                            <li>Kamar Asrama Santri</li>
+                            <li>Koperasi Pesantren</li>
+                            <li>Dapur Umum / Tempat Makan</li>
+                            <li>Kantor Pondok Pesantren</li>
+                            <li>Taman lingkungan Pesantren</li>
+                            <li>Sumber air bersih yang memadai</li>
+                        </ul>
+
+                        <h4 class="faq-subtitle">Layanan Tambahan:</h4>
+                        <ul class="faq-list faq-list-bottom">
+                            <li>Fasilitas Laundry</li>
+                            <li>Tours & Travel</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Info Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-question">📍 Lokasi Pesantren <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Alamat Pondok Pesantren Sukahideng berada di Kp. Bageur, RT 16 RW 04, Desa Sukarapih,
+                            Kecamatan Sukarame, Kabupaten Tasikmalaya, Provinsi Jawa Barat 46461. Pesantren ini juga
+                            dikenal sebagai Pondok Pesantren Perguruan KHZ. Musthafa Sukahideng.</p>
+
+                        <h4 class="faq-subtitle">Informasi Kontak & Lokasi:</h4>
+                        <ul class="faq-list faq-list-bottom">
+                            <li><strong>Alamat Lengkap:</strong> Kp. Bageur RT 16 RW 04, Desa Sukarapih, Kec. Sukarame,
+                                Kab. Tasikmalaya, Jawa Barat.</li>
+                            <li><strong>Telepon:</strong> (0265) 545702</li>
+                            <li><strong>Website:</strong> <a href="http://ponpes-sukahideng.or.id" target="_blank"
+                                    class="faq-link">ponpes-sukahideng.or.id</a></li>
+                            <li><strong>Instagram:</strong> <a href="https://instagram.com/pp.sukahideng"
+                                    target="_blank" class="faq-link">@pp.sukahideng</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri Section -->
+    <section id="galeri" class="gallery">
+        <div class="container">
+            <h2 class="section-title reveal">Galeri Foto</h2>
+            <p class="section-subtitle reveal">Kumpulan momen estetik dan seru selama di pesantren.</p>
+
+            <div class="gallery-grid reveal">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item">
+                    <img src="images/pondok1.webp" alt="Serunya ngaji bareng temen-temen" loading="lazy"
+                        decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Serunya ngaji bareng temen-temen 📖✨</span>
+                    </div>
+                </div>
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item">
+                    <img src="images/pondok2.jpeg" alt="Penampakan asrama" loading="lazy" decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Penampakan asrama gue nih, hehe 🏠😎</span>
+                    </div>
+                </div>
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item">
+                    <img src="images/pondok5.webp" alt="Penampakan asrama lain" loading="lazy" decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Penampakan asrama lain 🏰✨</span>
+                    </div>
+                </div>
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item">
+                    <img src="images/pondok4.jpeg" alt="Ngaji bareng di aula" loading="lazy" decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Vibes santriwati ngaji bareng di aula</span>
+                    </div>
+                </div>
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item">
+                    <img src="images/gedung.jpg" alt="Halaman asrama yang luas" loading="lazy" decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Vibes halaman asrama pas lagi sepi, adem banget 🕌✨</span>
+                    </div>
+                </div>
+                <!-- Gallery Item 6 -->
+                <div class="gallery-item">
+                    <img src="images/logo.png" alt="Logo Pondok Pesantren Sukahideng" loading="lazy" decoding="async">
+                    <div class="gallery-overlay">
+                        <span>Logo kebanggaan kita! 💚💛</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimoni Section -->
+    <section id="testimoni" class="testimoni bg-light">
+        <div class="container">
+            <h2 class="section-title reveal">Kata Temen-temen</h2>
+            <div class="testi-grid reveal">
+                <div class="testi-card">
+                    <p>"Kamu orangnya baik bro. Kalau aku lagi nggak punya uang atau apa-apa lu suka minjemin,
+                        kadang-kadang lu suka bilang 'bawa weh'. Terus kalau lagi sedih lu suka ngehibur. Banyak
+                        kenangan indah bro!"</p>
+                    <h5>- iicun</h5>
+                    <a href="https://instagram.com/ihs_an_nlfkri" target="_blank" class="testi-social-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        @ihs_an_nlfkri
+                    </a>
+                </div>
+                <div class="testi-card">
+                    <p>"Kalau aku lagi butuh ke kamu, kamu selalu ada. Pas lagi nggak ada kerjaan di sekolah juga kamu
+                        suka ngehibur sambil berpetualang. Pokoknya kamu itu kemana-mana selalu effort!"</p>
+                    <h5>- Fajar</h5>
+                    <a href="https://instagram.com/f_jarr.11" target="_blank" class="testi-social-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        @f_jarr.11
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2 class="section-title reveal">FAQ Pondok</h2>
+            <p class="section-subtitle reveal">Pertanyaan yang sering banget ditanyain ke gue.</p>
+            <div class="faq-container reveal">
+                <div class="faq-item">
+                    <button class="faq-question">Boleh bawa HP nggak di pondok? <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Enggak boleh, ya. Di pondok peraturannya sangat ketat soal larangan membawa HP. Tapi serunya,
+                            tanpa HP kita jadi lebih fokus belajar dan makin akrab karena sering ngobrol bareng
+                            teman-teman.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Makannya gimana? Enak nggak? <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Soal makan sudah disediakan oleh ibu-ibu dapur yang memasak dan mengantarkan makanan untuk
+                            para santri. Lauknya memang sederhana, tapi kalau sudah makan bareng teman-teman, rasanya
+                            bener-bener nikmat pol!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Sering kangen rumah nggak? <span class="icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Awal-awal pasti ada rasa kangen rumah. Tapi karena jadwal mengajinya padat dan banyak teman
+                            yang seru, kita jadi terbiasa dan malah betah. Apalagi kalau sudah kumpul bareng teman
+                            seangkatan, momennya pasti susah dilupakan deh!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="contact bg-light">
+        <div class="container">
+            <h2 class="section-title reveal">Kirim Pesan</h2>
+            <p class="section-subtitle reveal">Ada pertanyaan atau sekadar mau say hi? Tulis pesanmu di sini!</p>
+            <form id="contact-form" class="reveal">
+                <div class="form-group">
+                    <textarea id="message" rows="5" placeholder="Tulis pesanmu langsung di sini..." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Kirim ke WhatsApp 🚀</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <h4>Kuy, Connect Bareng Gue! 🤙</h4>
+                <div class="social-buttons">
+                    <a href="https://www.instagram.com/corellllpuln/" target="_blank" rel="noopener noreferrer"
+                        class="social-btn instagram">📷
+                        Instagram</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="social-btn whatsapp wa-link">💬
+                        WhatsApp</a>
+                </div>
+            </div>
+            <p>&copy; 2026 Santri Journey: Sukahideng. Dibuat dengan asik dan santai.</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div id="caption"></div>
+    </div>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

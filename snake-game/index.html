@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Snake Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        
+        <!-- LOBBY VIEW -->
+        <div id="lobby-view" class="lobby-view">
+            <h1 class="main-title">NEON SNAKE</h1>
+            
+            <div class="lobby-highscore">
+                <span>HIGH SCORE</span>
+                <span id="high-score">0</span>
+            </div>
+            
+            <div class="lobby-options">
+                <select id="skin-select" class="skin-select">
+                    <option value="neon">Skin: Neon Green</option>
+                    <option value="blue">Skin: Cyber Blue</option>
+                    <option value="pink">Skin: Hot Pink</option>
+                    <option value="rainbow">Skin: Rainbow</option>
+                </select>
+            </div>
+            
+            <button id="start-btn" class="btn btn-large">PLAY NOW</button>
+        </div>
+
+        <!-- GAME VIEW -->
+        <div id="game-view" class="hidden">
+            <header class="game-header">
+                <div class="score-board">
+                    <div class="score-box">
+                        <span>Score</span>
+                        <span id="score">0</span>
+                    </div>
+                </div>
+                <button id="pause-btn" class="btn btn-small" style="display:none;">Menu</button>
+            </header>
+
+            <main class="canvas-wrapper">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                
+                <!-- Overlay Screen for Game Over -->
+                <div id="overlay" class="overlay hidden">
+                    <h2 id="overlay-title">Game Over!</h2>
+                    <p id="overlay-msg">You scored 0 points!</p>
+                    <button id="back-btn" class="btn">Back to Lobby</button>
+                </div>
+            </main>
+
+            <div class="controls">
+                <p>Use WASD or Arrow Keys to move</p>
+                
+                <!-- D-Pad for Mobile Support -->
+                <div class="dpad">
+                    <button id="dpad-up" class="dpad-btn">▲</button>
+                    <div class="dpad-middle">
+                        <button id="dpad-left" class="dpad-btn">◀</button>
+                        <button id="dpad-right" class="dpad-btn">▶</button>
+                    </div>
+                    <button id="dpad-down" class="dpad-btn">▼</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
