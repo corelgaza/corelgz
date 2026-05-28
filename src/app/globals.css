@@ -1566,6 +1566,8 @@ button.gallery-item {
 .article-content ol {
     margin-left: 1.5rem;
     margin-bottom: 1.1rem;
+    padding-left: 1.25rem;
+    list-style-position: outside;
 }
 
 .article-content ul {
@@ -1578,6 +1580,7 @@ button.gallery-item {
 
 .article-content li {
     margin-bottom: 0.4rem;
+    display: list-item;
 }
 
 .article-content blockquote {

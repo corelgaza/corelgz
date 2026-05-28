@@ -520,6 +520,26 @@
   box-shadow: none;
 }
 
+/* Fix list markers inside markdown editor/preview */
+.admin-markdown-editor .w-md-editor ul,
+.admin-markdown-editor .w-md-editor ol {
+  padding-left: 1.5rem;
+  margin-left: 0;
+  list-style-position: outside;
+}
+
+.admin-markdown-editor .w-md-editor ul {
+  list-style: disc;
+}
+
+.admin-markdown-editor .w-md-editor ol {
+  list-style: decimal;
+}
+
+.admin-markdown-editor .w-md-editor li {
+  display: list-item;
+}
+
 /* Tag input */
 .admin-tag-input {
   display: flex;
