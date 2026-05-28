@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArticleContent from "@/components/ArticleContent";
 import { getArticleBySlug } from "@/lib/articles";
-import { getSiteUrl } from "@/lib/config";
+import { getSiteUrl, getWhatsAppUrl } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +75,8 @@ export default async function ArtikelDetailPage({ params }: Props) {
   if (!article) notFound();
 
   const url = `${getSiteUrl()}/artikel/${article.slug}`;
+  const shareText = `${article.title}\n\n${url}`;
+  const waShareUrl = getWhatsAppUrl(shareText);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -123,6 +125,18 @@ export default async function ArtikelDetailPage({ params }: Props) {
           {article.excerpt && (
             <p className="article-detail-excerpt">{article.excerpt}</p>
           )}
+
+          <div className="article-share">
+            <a
+              className="article-share-btn"
+              href={waShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Share ke WhatsApp
+            </a>
+          </div>
+
           <ArticleContent content={article.content} />
 
           {article.tags.length > 0 && (
