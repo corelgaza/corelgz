@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   other: {
     "theme-color": "#1B4332",
-    "google-site-verification": "tyeJ2rSfbobls5iZa6jwne48EX4rg2OnaFOJWguSGN8",
+    "google-site-verification": "R7pGA2TNWEEzFRPxzGpxw--HJGKX_QDtOt-1R8JroTc",
   },
 };
 
