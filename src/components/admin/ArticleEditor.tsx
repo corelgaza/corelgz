@@ -8,6 +8,7 @@ import TagInput from "./TagInput";
 import PromptGenerator from "./PromptGenerator";
 import CoverImageField from "./CoverImageField";
 import type { ArticleRow } from "@/lib/articles";
+import { useToast } from "./Toast";
 
 type Mode = "create" | "edit";
 
@@ -63,13 +64,12 @@ export default function ArticleEditor({
   initial?: ArticleRow;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [form, setForm] = useState<FormState>(
     initial ? fromArticle(initial) : emptyState()
   );
   const [slugTouched, setSlugTouched] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [showSeo, setShowSeo] = useState(false);
 
   useEffect(() => {
@@ -88,10 +88,8 @@ export default function ArticleEditor({
     setForm((f) => ({ ...f, [key]: value }));
 
   const persist = async (status: "draft" | "published") => {
-    setError(null);
-    setSuccess(null);
     if (!form.title.trim()) {
-      setError("Judul wajib diisi");
+      toast.push({ type: "error", title: "Judul wajib diisi" });
       return;
     }
     setSaving(true);
@@ -112,19 +110,27 @@ export default function ArticleEditor({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Gagal menyimpan");
+        toast.push({
+          type: "error",
+          title: "Gagal menyimpan",
+          description: data.error || "Coba lagi sebentar ya.",
+        });
         return;
       }
-      setSuccess(
-        status === "published" ? "Artikel dipublish!" : "Draft tersimpan."
-      );
+      toast.push({
+        type: "success",
+        title: status === "published" ? "Artikel dipublish!" : "Draft tersimpan.",
+      });
       if (mode === "create" && data.article?.id) {
         router.replace(`/admin/articles/${data.article.id}/edit`);
       } else {
         router.refresh();
       }
     } catch {
-      setError("Tidak bisa menghubungi server");
+      toast.push({
+        type: "error",
+        title: "Tidak bisa menghubungi server",
+      });
     } finally {
       setSaving(false);
     }
@@ -139,28 +145,40 @@ export default function ArticleEditor({
         method: "DELETE",
       });
       if (res.ok) {
+        toast.push({ type: "success", title: "Artikel dihapus" });
         router.replace("/admin/articles");
       } else {
         const data = (await res.json().catch(() => ({}))) as {
           error?: string;
         };
-        setError(data.error || "Gagal menghapus");
+        toast.push({
+          type: "error",
+          title: "Gagal menghapus",
+          description: data.error || "Coba lagi sebentar ya.",
+        });
         setSaving(false);
       }
     } catch {
-      setError("Tidak bisa menghapus");
+      toast.push({ type: "error", title: "Tidak bisa menghapus" });
       setSaving(false);
+    }
+  };
+
+  const publicUrl = form.slug ? `/artikel/${form.slug}` : "";
+
+  const copyText = async (text: string, label: string) => {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.push({ type: "success", title: `${label} tersalin` });
+    } catch {
+      toast.push({ type: "error", title: `Gagal menyalin ${label}` });
     }
   };
 
   return (
     <div className="admin-editor-layout">
       <div className="admin-editor-main">
-        {error && <div className="admin-alert admin-alert-error">{error}</div>}
-        {success && (
-          <div className="admin-alert admin-alert-success">{success}</div>
-        )}
-
         <div className="admin-card">
           <div className="admin-field">
             <label className="admin-label">
@@ -195,6 +213,34 @@ export default function ArticleEditor({
               <p className="admin-help">
                 Otomatis dari judul. Klik untuk edit manual.
               </p>
+            )}
+            {form.slug && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+                <button
+                  type="button"
+                  className="admin-btn admin-btn-ghost admin-btn-sm"
+                  onClick={() => copyText(form.slug, "Slug")}
+                  disabled={saving}
+                >
+                  Copy slug
+                </button>
+                <button
+                  type="button"
+                  className="admin-btn admin-btn-ghost admin-btn-sm"
+                  onClick={() => copyText(publicUrl, "URL")}
+                  disabled={saving}
+                >
+                  Copy URL
+                </button>
+                <a
+                  className="admin-btn admin-btn-ghost admin-btn-sm"
+                  href={publicUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Buka publik ↗
+                </a>
+              </div>
             )}
           </div>
 

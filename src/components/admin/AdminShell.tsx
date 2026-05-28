@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
+import { ToastProvider } from "./Toast";
 
 export default function AdminShell({
   children,
@@ -16,12 +17,14 @@ export default function AdminShell({
   }
 
   return (
-    <div className="admin-root">
-      <AdminSidebar />
-      <div className="admin-main">
-        <AdminHeader />
-        <main className="admin-content">{children}</main>
+    <ToastProvider>
+      <div className="admin-root">
+        <AdminSidebar />
+        <div className="admin-main">
+          <AdminHeader />
+          <main className="admin-content">{children}</main>
+        </div>
       </div>
-    </div>
+    </ToastProvider>
   );
 }

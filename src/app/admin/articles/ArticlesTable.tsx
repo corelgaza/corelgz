@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ArticleSummary } from "@/lib/articles";
+import { useToast } from "@/components/admin/Toast";
 
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
@@ -23,10 +24,10 @@ export default function ArticlesTable({
   initial: ArticleSummary[];
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [items, setItems] = useState(initial);
   const [query, setQuery] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -43,7 +44,6 @@ export default function ArticlesTable({
     if (!confirm(`Hapus artikel "${title}"? Aksi ini tidak bisa dibatalkan.`))
       return;
     setBusyId(id);
-    setError(null);
     try {
       const res = await fetch(`/api/admin/articles/${id}`, {
         method: "DELETE",
@@ -52,10 +52,15 @@ export default function ArticlesTable({
         const data = (await res.json().catch(() => ({}))) as {
           error?: string;
         };
-        setError(data.error || "Gagal menghapus");
+        toast.push({
+          type: "error",
+          title: "Gagal menghapus",
+          description: data.error || "Coba lagi sebentar ya.",
+        });
         return;
       }
       setItems((prev) => prev.filter((a) => a.id !== id));
+      toast.push({ type: "success", title: "Artikel dihapus" });
     } finally {
       setBusyId(null);
     }
@@ -64,7 +69,6 @@ export default function ArticlesTable({
   const handleToggleStatus = async (id: string, current: string) => {
     const next = current === "published" ? "draft" : "published";
     setBusyId(id);
-    setError(null);
     try {
       const res = await fetch(`/api/admin/articles/${id}`, {
         method: "PATCH",
@@ -75,7 +79,11 @@ export default function ArticlesTable({
         const data = (await res.json().catch(() => ({}))) as {
           error?: string;
         };
-        setError(data.error || "Gagal update status");
+        toast.push({
+          type: "error",
+          title: "Gagal update status",
+          description: data.error || "Coba lagi sebentar ya.",
+        });
         return;
       }
       router.refresh();
@@ -93,6 +101,10 @@ export default function ArticlesTable({
             : a
         )
       );
+      toast.push({
+        type: "success",
+        title: next === "published" ? "Artikel dipublish" : "Jadi draft",
+      });
     } finally {
       setBusyId(null);
     }
@@ -111,8 +123,6 @@ export default function ArticlesTable({
           />
         </div>
       </div>
-
-      {error && <div className="admin-alert admin-alert-error">{error}</div>}
 
       <div className="admin-table-wrapper">
         {filtered.length === 0 ? (
