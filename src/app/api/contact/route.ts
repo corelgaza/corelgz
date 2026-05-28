@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import { getWhatsAppUrl } from "@/lib/config";
 import { formatContactForWhatsApp, getVisitorLabel } from "@/lib/visitor";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 function getClientIp(request: Request): string | null {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]?.trim() ?? null;
   return request.headers.get("x-real-ip");
 }
+
+const MIN_MESSAGE_CHARS = 5;
+const MAX_MESSAGE_CHARS = 1200;
+const RATE_LIMIT_WINDOW_SECONDS = 45;
+const RATE_LIMIT_MAX_IN_WINDOW = 1;
 
 export async function POST(request: Request) {
   try {
@@ -20,9 +24,30 @@ export async function POST(request: Request) {
         ? body.visitorId.trim()
         : `v-${Date.now().toString(36)}`;
 
+    // Honeypot: bot biasanya ngisi field tersembunyi
+    const hp =
+      typeof body.hp === "string" ? body.hp.trim() : "";
+    if (hp) {
+      return NextResponse.json({ ok: true });
+    }
+
     if (!message) {
       return NextResponse.json(
         { error: "Pesan wajib diisi" },
+        { status: 400 }
+      );
+    }
+
+    if (message.length < MIN_MESSAGE_CHARS) {
+      return NextResponse.json(
+        { error: `Pesan minimal ${MIN_MESSAGE_CHARS} karakter` },
+        { status: 400 }
+      );
+    }
+
+    if (message.length > MAX_MESSAGE_CHARS) {
+      return NextResponse.json(
+        { error: `Pesan maksimal ${MAX_MESSAGE_CHARS} karakter` },
         { status: 400 }
       );
     }
@@ -31,20 +56,46 @@ export async function POST(request: Request) {
     const waText = formatContactForWhatsApp(visitorId, message);
     const ip = getClientIp(request);
 
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabase = createAdminClient();
+    if (supabase) {
+      // Rate limit berbasis DB (aman untuk serverless)
+      const sinceIso = new Date(
+        Date.now() - RATE_LIMIT_WINDOW_SECONDS * 1000
+      ).toISOString();
 
-    if (url && key) {
-      const supabase = createClient<Database>(url, key);
-      const storedMessage = ip
-        ? `${message}\n\n[ID: ${visitorId} | IP: ${ip}]`
-        : `${message}\n\n[ID: ${visitorId}]`;
+      // Supabase count query
+      let q = supabase
+        .from("contact_messages")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", sinceIso);
+
+      if (visitorId && ip) {
+        q = q.or(`visitor_id.eq.${visitorId},ip_address.eq.${ip}`);
+      } else if (visitorId) {
+        q = q.eq("visitor_id", visitorId);
+      } else if (ip) {
+        q = q.eq("ip_address", ip);
+      }
+
+      const { count, error: countError } = await q;
+
+      if (!countError && typeof count === "number") {
+        if (count >= RATE_LIMIT_MAX_IN_WINDOW) {
+          return NextResponse.json(
+            {
+              error:
+                "Terlalu cepat. Tunggu sebentar lalu kirim lagi ya.",
+            },
+            { status: 429 }
+          );
+        }
+      }
 
       await supabase.from("contact_messages").insert({
         name: displayName,
-        message: storedMessage,
+        message,
+        visitor_id: visitorId,
+        ip_address: ip,
       });
     }
 

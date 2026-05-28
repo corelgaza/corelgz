@@ -10,6 +10,7 @@ import Reveal from "./Reveal";
 
 export default function Contact() {
   const [message, setMessage] = useState("");
+  const [hp, setHp] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,6 +29,7 @@ export default function Contact() {
         body: JSON.stringify({
           visitorId,
           message: text,
+          hp,
         }),
       });
       const data = (await res.json()) as { waUrl?: string; ok?: boolean };
@@ -50,6 +52,18 @@ export default function Contact() {
         </p>
         <Reveal>
           <form id="contact-form" className="reveal" onSubmit={handleSubmit}>
+            <div style={{ position: "absolute", left: "-9999px", top: "auto" }} aria-hidden="true">
+              <label>
+                Jangan diisi
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                />
+              </label>
+            </div>
             <div className="form-group">
               <textarea
                 id="message"

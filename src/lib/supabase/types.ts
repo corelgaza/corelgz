@@ -16,18 +16,24 @@ export type Database = {
           id: string;
           name: string | null;
           message: string;
+          visitor_id: string | null;
+          ip_address: string | null;
           created_at: string;
         };
         Insert: {
           id?: string;
           name?: string | null;
           message: string;
+          visitor_id?: string | null;
+          ip_address?: string | null;
           created_at?: string;
         };
         Update: {
           id?: string;
           name?: string | null;
           message?: string;
+          visitor_id?: string | null;
+          ip_address?: string | null;
           created_at?: string;
         };
         Relationships: [];
