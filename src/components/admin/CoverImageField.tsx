@@ -23,14 +23,29 @@ export default function CoverImageField({
         method: "POST",
         body: fd,
       });
-      const data = await res.json();
+      const raw = await res.text();
+      let data: { error?: string; url?: string } = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        setError(
+          res.ok
+            ? "Respons server tidak valid"
+            : `Upload gagal (${res.status}). Coba pakai path /images/... atau URL gambar.`
+        );
+        return;
+      }
       if (!res.ok) {
         setError(data.error || "Upload gagal");
         return;
       }
+      if (!data.url) {
+        setError("Upload gagal: URL gambar tidak diterima");
+        return;
+      }
       onChange(data.url);
     } catch {
-      setError("Tidak bisa upload");
+      setError("Tidak bisa upload. Coba pakai path /images/... atau URL gambar.");
     } finally {
       setUploading(false);
     }
