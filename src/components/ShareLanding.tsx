@@ -74,6 +74,24 @@ export default function ShareLanding() {
         </div>
 
         <div className="share-divider">
+          <span>Gambar Status WhatsApp (9:16)</span>
+        </div>
+
+        <div className="share-status-box">
+          <p>
+            Download gambar vertikal khusus Status WA — tinggal upload, gak perlu
+            screenshot.
+          </p>
+          <a
+            href="/images/wa-status.jpg"
+            download="santri-journey-status.jpg"
+            className="share-status-download"
+          >
+            📥 Download Gambar Status WA
+          </a>
+        </div>
+
+        <div className="share-divider">
           <span>Pesan siap share ke temen</span>
         </div>
 
