@@ -79,8 +79,9 @@ export default function ShareLanding() {
 
         <div className="share-status-box">
           <p>
-            Download gambar vertikal khusus Status WA — tinggal upload, gak perlu
-            screenshot.
+            Download gambar vertikal khusus Status WA. Temen bisa{" "}
+            <strong>scan QR code</strong> di gambar untuk langsung buka website
+            (link di gambar tidak bisa diklik — itu normal di Status WA).
           </p>
           <a
             href="/images/wa-status.jpg"
