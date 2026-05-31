@@ -37,10 +37,28 @@ Cerita mondok · tips santri baru · artikel · galeri pondok
 
 Link di bio / story 👇
 ${getShareUrl("instagram")}`,
+
+  facebook: `Halo semua! 👋
+
+Perkenalkan Santri Journey — website personal tentang kehidupan santri di Pondok Pesantren Sukahideng, Tasikmalaya.
+
+✨ Isinya:
+• Cerita & tips mondok buat pemula
+• Artikel & galeri foto pondok
+• Jadwal sholat & peta lokasi
+
+Yuk kepoin:
+${getShareUrl("facebook")}`,
 } as const;
 
 export type ShareChannel = keyof typeof SHARE_MESSAGES;
 
 export function getShareMessage(channel: ShareChannel = "whatsapp"): string {
   return SHARE_MESSAGES[channel];
+}
+
+/** Buka dialog share Facebook (preview gambar dari Open Graph otomatis). */
+export function getFacebookShareUrl(pageUrl?: string): string {
+  const url = pageUrl ?? getShareUrl("facebook");
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
 }

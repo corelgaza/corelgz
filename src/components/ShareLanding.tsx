@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
+  getFacebookShareUrl,
   getShareMessage,
   getShareUrl,
   type ShareChannel,
@@ -18,6 +19,7 @@ const FEATURES = [
 
 const CHANNELS: { id: ShareChannel; label: string; icon: string }[] = [
   { id: "whatsapp", label: "WhatsApp", icon: "💬" },
+  { id: "facebook", label: "Facebook", icon: "📘" },
   { id: "casual", label: "Chat santai", icon: "✌️" },
   { id: "professional", label: "Formal", icon: "📋" },
   { id: "instagram", label: "Instagram", icon: "📸" },
@@ -91,14 +93,24 @@ export default function ShareLanding() {
           ))}
         </div>
 
-        <a
-          href={getWhatsAppUrl(getShareMessage("whatsapp"))}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="share-wa-btn"
-        >
-          Share langsung ke WhatsApp 🚀
-        </a>
+        <div className="share-social-row">
+          <a
+            href={getWhatsAppUrl(getShareMessage("whatsapp"))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-wa-btn"
+          >
+            Share ke WhatsApp 🚀
+          </a>
+          <a
+            href={getFacebookShareUrl(getShareUrl("facebook"))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="share-fb-btn"
+          >
+            Share ke Facebook 📘
+          </a>
+        </div>
 
         <p className="share-url-display">{shareUrl}</p>
         <p className="share-footer-note">
