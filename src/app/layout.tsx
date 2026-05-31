@@ -27,11 +27,27 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   openGraph: {
-    title: "Santri Journey | Kehidupan Seru di Pesantren",
+    title: "Santri Journey | Kehidupan Santri di Pesantren Sukahideng",
     description:
-      "Kuy kepoin cerita seru, jadwal padat, dan galeri estetik gue selama mondok bareng temen-temen!",
-    images: ["/images/pondok1.webp"],
+      "Cerita mondok, tips santri baru, artikel, galeri foto, jadwal sholat & peta lokasi — Pondok Pesantren Sukahideng, Tasikmalaya.",
+    images: [
+      {
+        url: "/images/cover-hidup-di-pesantren.png",
+        width: 1200,
+        height: 630,
+        alt: "Santri Journey — Sukahideng",
+      },
+    ],
     type: "website",
+    siteName: "Santri Journey",
+    locale: "id_ID",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Santri Journey | Kehidupan Santri di Pesantren Sukahideng",
+    description:
+      "Cerita mondok, tips santri baru, artikel, galeri, jadwal sholat & peta lokasi pondok.",
+    images: ["/images/cover-hidup-di-pesantren.png"],
   },
   other: {
     "theme-color": "#1B4332",

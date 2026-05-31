@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { recordPageView } from "@/lib/analytics";
 
-const ALLOWED_PREFIXES = ["/", "/artikel"];
+const ALLOWED_PREFIXES = ["/", "/artikel", "/share"];
 
 function isTrackablePath(path: string): boolean {
   if (!path.startsWith("/")) return false;

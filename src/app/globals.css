@@ -1713,3 +1713,216 @@ button.gallery-item {
     color: var(--clr-primary);
 }
 
+/* Share landing page */
+.share-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+    position: relative;
+    background: var(--clr-bg);
+}
+
+.share-page-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45, 106, 79, 0.18), transparent),
+        radial-gradient(ellipse 60% 50% at 100% 100%, rgba(184, 134, 11, 0.1), transparent),
+        var(--clr-bg);
+    pointer-events: none;
+}
+
+.share-card {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: var(--clr-bg);
+    border: 1px solid rgba(27, 67, 50, 0.1);
+    border-radius: 20px;
+    padding: 2.25rem 2rem;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.03),
+        0 20px 50px rgba(27, 67, 50, 0.1);
+    text-align: center;
+}
+
+.share-badge {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--clr-primary);
+    background: var(--clr-accent);
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+}
+
+.share-title {
+    font-size: 1.65rem;
+    line-height: 1.35;
+    margin-bottom: 1rem;
+    color: var(--clr-primary-dark);
+}
+
+.share-title span {
+    color: var(--clr-primary);
+}
+
+.share-lead {
+    color: var(--clr-text-muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.share-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+    list-style: none;
+    padding: 0;
+}
+
+.share-features li {
+    font-size: 0.82rem;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--clr-primary-dark);
+    background: var(--clr-bg-alt);
+    border: 1px solid rgba(27, 67, 50, 0.08);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+}
+
+.share-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.5rem;
+}
+
+.share-btn-main {
+    display: block;
+    text-align: center;
+    padding: 0.9rem 1.25rem;
+    font-size: 1rem;
+}
+
+.share-btn-copy {
+    background: transparent;
+    border: 1.5px solid var(--clr-primary);
+    color: var(--clr-primary);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.share-btn-copy:hover {
+    background: var(--clr-primary);
+    color: #fff;
+}
+
+.share-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--clr-text-muted);
+    font-size: 0.78rem;
+}
+
+.share-divider::before,
+.share-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.share-channel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.share-channel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.65rem 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    background: var(--clr-bg-alt);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--clr-text-main);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.share-channel-btn:hover {
+    border-color: var(--clr-primary);
+    background: var(--clr-accent);
+}
+
+.share-channel-icon {
+    font-size: 1rem;
+}
+
+.share-wa-btn {
+    display: block;
+    width: 100%;
+    padding: 0.85rem;
+    background: #25d366;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.92rem;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: filter 0.2s;
+}
+
+.share-wa-btn:hover {
+    filter: brightness(1.05);
+}
+
+.share-url-display {
+    font-size: 0.75rem;
+    color: var(--clr-text-muted);
+    word-break: break-all;
+    margin-bottom: 0.5rem;
+    opacity: 0.85;
+}
+
+.share-footer-note {
+    font-size: 0.72rem;
+    color: var(--clr-text-muted);
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .share-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .share-title {
+        font-size: 1.4rem;
+    }
+}
+
