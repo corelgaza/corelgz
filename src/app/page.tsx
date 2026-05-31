@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
 import InfoPesantren from "@/components/InfoPesantren";
+import LocationMap from "@/components/LocationMap";
 import LatestArticles from "@/components/LatestArticles";
 import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
@@ -43,6 +44,7 @@ export default async function HomePage() {
         <Gallery images={galleryImages} />
         <Testimonials />
         <FaqSection />
+        <LocationMap />
         <Contact />
       </main>
       <Footer />

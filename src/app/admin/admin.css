@@ -540,6 +540,33 @@
   display: list-item;
 }
 
+/* Autosave indicator */
+.admin-autosave-bar {
+  min-height: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-autosave-status {
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.admin-autosave-pending {
+  color: var(--admin-warn);
+}
+
+.admin-autosave-saving {
+  color: var(--admin-text-muted);
+}
+
+.admin-autosave-saved {
+  color: var(--admin-success);
+}
+
+.admin-autosave-error {
+  color: var(--admin-danger);
+}
+
 /* Tag input */
 .admin-tag-input {
   display: flex;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import slugify from "slugify";
 import MarkdownField from "./MarkdownField";
@@ -23,6 +23,10 @@ type FormState = {
   meta_description: string;
   status: "draft" | "published";
 };
+
+type AutoSaveStatus = "idle" | "pending" | "saving" | "saved" | "error";
+
+const AUTOSAVE_DELAY_MS = 2500;
 
 function emptyState(): FormState {
   return {
@@ -56,6 +60,10 @@ function autoSlug(s: string): string {
   return slugify(s, { lower: true, strict: true, trim: true, locale: "id" });
 }
 
+function snapshot(f: FormState): string {
+  return JSON.stringify(f);
+}
+
 export default function ArticleEditor({
   mode,
   initial,
@@ -68,9 +76,16 @@ export default function ArticleEditor({
   const [form, setForm] = useState<FormState>(
     initial ? fromArticle(initial) : emptyState()
   );
+  const [articleId, setArticleId] = useState<string | undefined>(initial?.id);
   const [slugTouched, setSlugTouched] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
   const [showSeo, setShowSeo] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] =
+    useState<AutoSaveStatus>("idle");
+
+  const lastSavedRef = useRef(snapshot(initial ? fromArticle(initial) : emptyState()));
+  const manualSavingRef = useRef(false);
+  const autoSavingRef = useRef(false);
 
   useEffect(() => {
     if (slugTouched) return;
@@ -87,61 +102,142 @@ export default function ArticleEditor({
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  const persist = async (status: "draft" | "published") => {
-    if (!form.title.trim()) {
-      toast.push({ type: "error", title: "Judul wajib diisi" });
-      return;
-    }
-    setSaving(true);
-    try {
+  const hasUnsavedChanges = snapshot(form) !== lastSavedRef.current;
+
+  const performSave = useCallback(
+    async (
+      status: "draft" | "published",
+      options?: { silent?: boolean; isAutosave?: boolean }
+    ): Promise<boolean> => {
+      if (!form.title.trim()) {
+        if (!options?.silent) {
+          toast.push({ type: "error", title: "Judul wajib diisi" });
+        }
+        return false;
+      }
+
       const payload = {
         ...form,
-        status,
+        status: options?.isAutosave ? form.status : status,
       };
-      const url =
-        mode === "create"
-          ? "/api/admin/articles"
-          : `/api/admin/articles/${initial?.id}`;
-      const method = mode === "create" ? "POST" : "PATCH";
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast.push({
-          type: "error",
-          title: "Gagal menyimpan",
-          description: data.error || "Coba lagi sebentar ya.",
-        });
-        return;
-      }
-      toast.push({
-        type: "success",
-        title: status === "published" ? "Artikel dipublish!" : "Draft tersimpan.",
-      });
-      if (mode === "create" && data.article?.id) {
-        router.replace(`/admin/articles/${data.article.id}/edit`);
+
+      const isCreate = !articleId;
+      const url = isCreate
+        ? "/api/admin/articles"
+        : `/api/admin/articles/${articleId}`;
+      const method = isCreate ? "POST" : "PATCH";
+
+      if (options?.isAutosave) {
+        autoSavingRef.current = true;
+        setAutoSaveStatus("saving");
       } else {
-        router.refresh();
+        manualSavingRef.current = true;
+        setSaving(true);
       }
-    } catch {
-      toast.push({
-        type: "error",
-        title: "Tidak bisa menghubungi server",
-      });
-    } finally {
-      setSaving(false);
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (options?.isAutosave) {
+            setAutoSaveStatus("error");
+          } else {
+            toast.push({
+              type: "error",
+              title: "Gagal menyimpan",
+              description: data.error || "Coba lagi sebentar ya.",
+            });
+          }
+          return false;
+        }
+
+        lastSavedRef.current = snapshot(form);
+
+        if (options?.isAutosave) {
+          setAutoSaveStatus("saved");
+        } else {
+          toast.push({
+            type: "success",
+            title:
+              status === "published" ? "Artikel dipublish!" : "Draft tersimpan.",
+          });
+        }
+
+        if (isCreate && data.article?.id) {
+          setArticleId(data.article.id);
+          router.replace(`/admin/articles/${data.article.id}/edit`);
+        } else if (!options?.isAutosave) {
+          router.refresh();
+        }
+
+        return true;
+      } catch {
+        if (options?.isAutosave) {
+          setAutoSaveStatus("error");
+        } else {
+          toast.push({
+            type: "error",
+            title: "Tidak bisa menghubungi server",
+          });
+        }
+        return false;
+      } finally {
+        if (options?.isAutosave) {
+          autoSavingRef.current = false;
+        } else {
+          manualSavingRef.current = false;
+          setSaving(false);
+        }
+      }
+    },
+    [articleId, form, router, toast]
+  );
+
+  useEffect(() => {
+    if (!form.title.trim()) {
+      setAutoSaveStatus("idle");
+      return;
     }
+    if (!hasUnsavedChanges) {
+      setAutoSaveStatus("idle");
+      return;
+    }
+    if (manualSavingRef.current || autoSavingRef.current) return;
+
+    setAutoSaveStatus("pending");
+
+    const timer = window.setTimeout(() => {
+      if (manualSavingRef.current || autoSavingRef.current) return;
+      void performSave("draft", { silent: true, isAutosave: true });
+    }, AUTOSAVE_DELAY_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [form, hasUnsavedChanges, performSave]);
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasUnsavedChanges]);
+
+  const persist = (status: "draft" | "published") => {
+    void performSave(status);
   };
 
   const handleDelete = async () => {
-    if (!initial?.id) return;
+    if (!articleId) return;
     if (!confirm(`Hapus artikel "${form.title}"?`)) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/admin/articles/${initial.id}`, {
+      const res = await fetch(`/api/admin/articles/${articleId}`, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -176,10 +272,28 @@ export default function ArticleEditor({
     }
   };
 
+  const autoSaveLabel =
+    autoSaveStatus === "idle"
+      ? null
+      : {
+          pending: "Perubahan belum disimpan…",
+          saving: "Menyimpan otomatis…",
+          saved: "Tersimpan otomatis",
+          error: "Autosave gagal — simpan manual ya",
+        }[autoSaveStatus];
+
   return (
     <div className="admin-editor-layout">
       <div className="admin-editor-main">
         <div className="admin-card">
+          <div className="admin-autosave-bar">
+            <span
+              className={`admin-autosave-status admin-autosave-${autoSaveStatus}`}
+            >
+              {autoSaveLabel}
+            </span>
+          </div>
+
           <div className="admin-field">
             <label className="admin-label">
               Judul artikel{" "}
@@ -197,7 +311,8 @@ export default function ArticleEditor({
 
           <div className="admin-field">
             <label className="admin-label">
-              Slug URL <span className="admin-muted">(/artikel/{form.slug || "..."})</span>
+              Slug URL{" "}
+              <span className="admin-muted">(/artikel/{form.slug || "..."})</span>
             </label>
             <input
               type="text"
@@ -215,7 +330,14 @@ export default function ArticleEditor({
               </p>
             )}
             {form.slug && (
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  marginTop: 8,
+                }}
+              >
                 <button
                   type="button"
                   className="admin-btn admin-btn-ghost admin-btn-sm"
@@ -269,10 +391,7 @@ export default function ArticleEditor({
 
           <div className="admin-field">
             <label className="admin-label">Tags (max 12)</label>
-            <TagInput
-              value={form.tags}
-              onChange={(t) => update("tags", t)}
-            />
+            <TagInput value={form.tags} onChange={(t) => update("tags", t)} />
           </div>
         </div>
 
@@ -357,12 +476,12 @@ export default function ArticleEditor({
                 disabled={saving}
                 className="admin-btn admin-btn-primary"
               >
-                {form.status === "published" && mode === "edit"
+                {form.status === "published" && articleId
                   ? "Update & Tetap Publish"
                   : "Publish Sekarang"}
               </button>
             </div>
-            {mode === "edit" && (
+            {articleId && (
               <button
                 type="button"
                 onClick={handleDelete}

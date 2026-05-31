@@ -5,8 +5,22 @@ export const NAV_LINKS = [
   { href: "/artikel", label: "Artikel" },
   { href: "/#kegiatan", label: "Kegiatan" },
   { href: "/#galeri", label: "Galeri" },
+  { href: "/#lokasi", label: "Lokasi" },
   { href: "/#kontak", label: "Kontak" },
 ] as const;
+
+export const PONDOK_LOCATION = {
+  name: "Pondok Pesantren Sukahideng",
+  address:
+    "Kp. Bageur, RT 16 RW 04, Desa Sukarapih, Kec. Sukarame, Kab. Tasikmalaya, Jawa Barat 46461",
+  phone: "(0265) 545702",
+  lat: -7.3497,
+  lng: 108.2139,
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Pondok+Pesantren+Sukahideng+Sukarame+Tasikmalaya",
+  embedUrl:
+    "https://www.google.com/maps?q=Pondok+Pesantren+Sukahideng,+Kp.+Bageur,+Sukarame,+Tasikmalaya&hl=id&z=15&output=embed",
+} as const;
 
 export const BIODATA = [
   { label: "Nama Lengkap", value: "Corel Rambu Gaza Wiwoho" },
