@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { getWhatsAppUrl } from "@/lib/config";
-import {
-  buildAdminReplyTemplate,
-  type ContactMessageRow,
-} from "@/lib/messages";
+import { buildAdminReplyTemplate } from "@/lib/messages";
+import { useAdminInbox } from "./AdminInboxProvider";
 import { useToast } from "./Toast";
 
 function formatDate(iso: string): string {
@@ -19,58 +17,43 @@ function formatDate(iso: string): string {
   }
 }
 
-export default function MessagesList({
-  initial,
-}: {
-  initial: ContactMessageRow[];
-}) {
+export default function MessagesList() {
   const toast = useToast();
-  const [items, setItems] = useState(initial);
+  const { messages, unreadCount, loading, setRead, markAllRead } =
+    useAdminInbox();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const unreadCount = items.filter((m) => !m.is_read).length;
-
-  const setRead = async (id: string, is_read: boolean) => {
+  const handleSetRead = async (id: string, is_read: boolean) => {
     setBusyId(id);
     try {
-      const res = await fetch(`/api/admin/messages/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_read }),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        message?: ContactMessageRow;
-        error?: string;
-      };
-      if (!res.ok || !data.message) {
+      const ok = await setRead(id, is_read);
+      if (!ok) {
         toast.push({ type: "error", title: "Gagal update status pesan" });
-        return;
       }
-      setItems((prev) =>
-        prev.map((m) => (m.id === id ? data.message! : m))
-      );
     } finally {
       setBusyId(null);
     }
   };
 
-  const copyReply = async (message: ContactMessageRow) => {
+  const copyReply = async (message: (typeof messages)[number]) => {
     const text = buildAdminReplyTemplate(message);
     try {
       await navigator.clipboard.writeText(text);
       setCopiedId(message.id);
       window.setTimeout(() => setCopiedId(null), 2000);
-      if (!message.is_read) await setRead(message.id, true);
+      if (!message.is_read) await handleSetRead(message.id, true);
     } catch {
       toast.push({ type: "error", title: "Gagal menyalin teks" });
     }
   };
 
-  const markAllRead = async () => {
-    const unread = items.filter((m) => !m.is_read);
-    for (const m of unread) {
-      await setRead(m.id, true);
+  const handleMarkAllRead = async () => {
+    setBusyId("all");
+    try {
+      await markAllRead();
+    } finally {
+      setBusyId(null);
     }
   };
 
@@ -78,23 +61,33 @@ export default function MessagesList({
     <div>
       <div className="admin-toolbar">
         <p className="admin-muted">
-          {items.length} pesan total
+          {messages.length} pesan total
           {unreadCount > 0 && (
             <span className="admin-unread-pill">{unreadCount} belum dibaca</span>
+          )}
+          {loading && (
+            <span className="admin-live-dot" title="Live update aktif" />
           )}
         </p>
         {unreadCount > 0 && (
           <button
             type="button"
             className="admin-btn admin-btn-ghost admin-btn-sm"
-            onClick={markAllRead}
+            onClick={handleMarkAllRead}
+            disabled={busyId === "all"}
           >
-            Tandai semua dibaca
+            {busyId === "all" ? "Menyimpan..." : "Tandai semua dibaca"}
           </button>
         )}
       </div>
 
-      {items.length === 0 ? (
+      {loading && messages.length === 0 ? (
+        <div className="admin-card">
+          <div className="admin-empty">
+            <p className="admin-muted">Memuat pesan…</p>
+          </div>
+        </div>
+      ) : messages.length === 0 ? (
         <div className="admin-card">
           <div className="admin-empty">
             <p style={{ fontSize: "2rem" }}>💬</p>
@@ -106,7 +99,7 @@ export default function MessagesList({
         </div>
       ) : (
         <div className="admin-list">
-          {items.map((m) => (
+          {messages.map((m) => (
             <div
               key={m.id}
               className={`admin-card admin-message-card${
@@ -153,7 +146,7 @@ export default function MessagesList({
                 <button
                   type="button"
                   className="admin-btn admin-btn-ghost admin-btn-sm"
-                  onClick={() => setRead(m.id, !m.is_read)}
+                  onClick={() => handleSetRead(m.id, !m.is_read)}
                   disabled={busyId === m.id}
                 >
                   {m.is_read ? "Tandai belum dibaca" : "Tandai dibaca"}

@@ -1,4 +1,4 @@
-import MessagesList from "@/components/admin/MessagesList";
+import MessagesPageClient from "@/components/admin/MessagesPageClient";
 import { listContactMessages } from "@/lib/messages";
 
 export const dynamic = "force-dynamic";
@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 export default async function AdminMessagesPage() {
   const messages = await listContactMessages();
 
-  return <MessagesList initial={messages} />;
+  return <MessagesPageClient initial={messages} />;
 }

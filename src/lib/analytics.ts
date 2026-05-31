@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type PageViewStats = {
@@ -56,7 +57,11 @@ export async function getPageViewStats(): Promise<PageViewStats | null> {
       .select("id", { count: "exact", head: true })
       .gte("viewed_at", sevenDaysAgo),
     supabase.from("page_views").select("id", { count: "exact", head: true }),
-    supabase.from("page_views").select("path").limit(5000),
+    supabase
+      .from("page_views")
+      .select("path")
+      .gte("viewed_at", sevenDaysAgo)
+      .limit(3000),
     supabase
       .from("page_views")
       .select("viewed_at")
@@ -118,9 +123,18 @@ export async function getArticleViewCounts(): Promise<Record<string, number>> {
 
 export async function getTopArticleViews(
   articles: { slug: string; title: string; status: string }[],
-  limit = 5
+  limit = 5,
+  prefetchedCounts?: Record<string, number>
 ): Promise<ArticleViewStat[]> {
-  const counts = await getArticleViewCounts();
+  const counts = prefetchedCounts ?? (await getArticleViewCounts());
+  return mapTopArticleViews(articles, counts, limit);
+}
+
+export function mapTopArticleViews(
+  articles: { slug: string; title: string; status: string }[],
+  counts: Record<string, number>,
+  limit = 5
+): ArticleViewStat[] {
   return articles
     .map((a) => ({
       slug: a.slug,
@@ -131,3 +145,17 @@ export async function getTopArticleViews(
     .sort((a, b) => b.views - a.views)
     .slice(0, limit);
 }
+
+const CACHE_TTL_SECONDS = 60;
+
+export const getCachedPageViewStats = unstable_cache(
+  async () => getPageViewStats(),
+  ["admin-page-view-stats"],
+  { revalidate: CACHE_TTL_SECONDS }
+);
+
+export const getCachedArticleViewCounts = unstable_cache(
+  async () => getArticleViewCounts(),
+  ["admin-article-view-counts"],
+  { revalidate: CACHE_TTL_SECONDS }
+);

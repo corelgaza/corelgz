@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAdminInboxOptional } from "./AdminInboxProvider";
 
 type NavItem = {
   href: string;
@@ -18,12 +19,10 @@ const NAV_ITEMS: ReadonlyArray<Omit<NavItem, "badge">> = [
   { href: "/admin/messages", label: "Pesan", icon: "💬" },
 ];
 
-export default function AdminSidebar({
-  unreadCount = 0,
-}: {
-  unreadCount?: number;
-}) {
+export default function AdminSidebar() {
   const pathname = usePathname();
+  const inbox = useAdminInboxOptional();
+  const unreadCount = inbox?.unreadCount ?? 0;
 
   const items: NavItem[] = NAV_ITEMS.map((item) =>
     item.href === "/admin/messages" && unreadCount > 0

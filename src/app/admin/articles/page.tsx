@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getArticleViewCounts } from "@/lib/analytics";
+import { getCachedArticleViewCounts } from "@/lib/analytics";
 import { listArticlesAdmin } from "@/lib/articles";
 import ArticlesTable from "./ArticlesTable";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminArticlesPage() {
   const [articles, viewCounts] = await Promise.all([
     listArticlesAdmin(),
-    getArticleViewCounts(),
+    getCachedArticleViewCounts(),
   ]);
 
   return (

@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { getPageViewStats, getTopArticleViews } from "@/lib/analytics";
+import DashboardRecentMessages from "@/components/admin/DashboardRecentMessages";
+import {
+  getCachedArticleViewCounts,
+  getCachedPageViewStats,
+  mapTopArticleViews,
+} from "@/lib/analytics";
 import { listArticlesAdmin } from "@/lib/articles";
-import { listContactMessages } from "@/lib/messages";
 
 export const dynamic = "force-dynamic";
 
@@ -17,19 +21,17 @@ function formatDateShort(iso: string): string {
 }
 
 export default async function AdminDashboardPage() {
-  const [articles, messages, viewStats] = await Promise.all([
+  const [articles, viewStats, viewCounts] = await Promise.all([
     listArticlesAdmin(),
-    listContactMessages(),
-    getPageViewStats(),
+    getCachedPageViewStats(),
+    getCachedArticleViewCounts(),
   ]);
 
-  const topArticles = await getTopArticleViews(articles, 5);
-  const recentMessages = messages.slice(0, 5);
+  const topArticles = mapTopArticleViews(articles, viewCounts, 5);
 
   const published = articles.filter((a) => a.status === "published").length;
   const drafts = articles.length - published;
   const recentArticles = articles.slice(0, 5);
-  const unreadMessages = messages.filter((m) => !m.is_read).length;
   const maxDaily =
     viewStats?.dailyLast7.reduce((m, d) => Math.max(m, d.views), 0) ?? 1;
 
@@ -208,52 +210,7 @@ export default async function AdminDashboardPage() {
           )}
         </div>
 
-        <div className="admin-card">
-          <div className="admin-card-header">
-            <h3 className="admin-card-title">Pesan Terbaru</h3>
-            <Link href="/admin/messages" className="admin-link">
-              Lihat semua
-              {unreadMessages > 0 && (
-                <span className="admin-unread-pill" style={{ marginLeft: 8 }}>
-                  {unreadMessages} baru
-                </span>
-              )}
-            </Link>
-          </div>
-          {recentMessages.length === 0 ? (
-            <div className="admin-empty">
-              <p>Belum ada pesan masuk dari pengunjung.</p>
-            </div>
-          ) : (
-            <div className="admin-list">
-              {recentMessages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`admin-list-item${m.is_read ? "" : " is-unread-item"}`}
-                >
-                  <div className="admin-list-item-time">
-                    {formatDateShort(m.created_at)} ·{" "}
-                    <strong>{m.name ?? "Anon"}</strong>
-                    {!m.is_read && (
-                      <span className="admin-unread-dot" aria-label="Belum dibaca" />
-                    )}
-                  </div>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "0.9rem",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {m.message.length > 180
-                      ? m.message.slice(0, 180) + "…"
-                      : m.message}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <DashboardRecentMessages />
       </div>
     </div>
   );

@@ -1358,6 +1358,29 @@
   vertical-align: middle;
 }
 
+.admin-live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--admin-success);
+  margin-left: 8px;
+  vertical-align: middle;
+  animation: admin-live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes admin-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
 .admin-list-item.is-unread-item {
   background: rgba(184, 134, 11, 0.06);
   border-radius: 8px;
