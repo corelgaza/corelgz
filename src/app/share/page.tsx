@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ShareLanding from "@/components/ShareLanding";
 import { getSiteUrl } from "@/lib/config";
+import { ogImageMetadata } from "@/lib/og";
 
 const title = "Santri Journey | Kehidupan Santri di Pesantren Sukahideng";
 const description =
@@ -17,20 +18,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Santri Journey",
     locale: "id_ID",
-    images: [
-      {
-        url: "/images/cover-hidup-di-pesantren.png",
-        width: 1200,
-        height: 630,
-        alt: "Santri Journey — Kehidupan di Pesantren Sukahideng",
-      },
-    ],
+    images: ogImageMetadata(),
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/images/cover-hidup-di-pesantren.png"],
+    images: ["/images/og-share.jpg"],
   },
 };
 
