@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
+import PageViewTracker from "@/components/PageViewTracker";
 import { getSiteUrl } from "@/lib/config";
 import "./globals.css";
 
@@ -49,6 +50,7 @@ export default function RootLayout({
         <link rel="preload" href="/images/hero-bg.jpg" as="image" />
       </head>
       <body className={`${inter.variable} ${lora.variable}`}>
+        <PageViewTracker />
         {children}
       </body>
     </html>

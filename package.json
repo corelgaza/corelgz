@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "db:setup": "node scripts/run-schema.mjs",
-    "db:migrate:articles": "node scripts/apply-migration.mjs supabase/migrations/add_articles.sql"
+    "db:migrate:articles": "node scripts/apply-migration.mjs supabase/migrations/add_articles.sql",
+    "db:migrate:storage": "node scripts/apply-migration.mjs supabase/migrations/add_storage_bucket.sql",
+    "db:migrate:analytics": "node scripts/apply-migration.mjs supabase/migrations/add_page_views.sql"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",

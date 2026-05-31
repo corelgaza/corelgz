@@ -68,6 +68,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      page_views: {
+        Row: {
+          id: string;
+          path: string;
+          viewed_at: string;
+          session_key: string | null;
+        };
+        Insert: {
+          id?: string;
+          path: string;
+          viewed_at?: string;
+          session_key?: string | null;
+        };
+        Update: {
+          id?: string;
+          path?: string;
+          viewed_at?: string;
+          session_key?: string | null;
+        };
+        Relationships: [];
+      };
       articles: {
         Row: {
           id: string;

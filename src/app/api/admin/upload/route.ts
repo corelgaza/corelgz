@@ -11,6 +11,7 @@ const ALLOWED_TYPES = new Set([
 ]);
 
 const MAX_BYTES = 5 * 1024 * 1024;
+const BUCKET = "article-covers";
 
 function extFromType(mime: string): string {
   switch (mime) {
@@ -62,7 +63,23 @@ export async function POST(request: Request) {
   const supabase = createAdminClient();
   if (!supabase) {
     return NextResponse.json(
-      { error: "Supabase belum dikonfigurasi" },
+      {
+        error:
+          "Supabase belum dikonfigurasi. Pastikan SUPABASE_SERVICE_ROLE_KEY ada di Vercel.",
+      },
+      { status: 500 }
+    );
+  }
+
+  const { data: bucket, error: bucketError } = await supabase.storage.getBucket(
+    BUCKET
+  );
+  if (bucketError || !bucket) {
+    return NextResponse.json(
+      {
+        error:
+          "Bucket article-covers belum ada. Jalankan: npm run db:migrate:storage",
+      },
       { status: 500 }
     );
   }
@@ -74,20 +91,21 @@ export async function POST(request: Request) {
 
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  const { error } = await supabase.storage
-    .from("article-covers")
-    .upload(path, buffer, {
-      contentType: file.type,
-      cacheControl: "31536000",
-      upsert: false,
-    });
+  const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
+    contentType: file.type,
+    cacheControl: "31536000",
+    upsert: false,
+  });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: `Upload gagal: ${error.message}` },
+      { status: 500 }
+    );
   }
 
   const { data: publicUrlData } = supabase.storage
-    .from("article-covers")
+    .from(BUCKET)
     .getPublicUrl(path);
 
   return NextResponse.json({

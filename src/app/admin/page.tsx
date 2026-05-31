@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getPageViewStats } from "@/lib/analytics";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { listArticlesAdmin } from "@/lib/articles";
 
@@ -34,39 +35,113 @@ function formatDateShort(iso: string): string {
 }
 
 export default async function AdminDashboardPage() {
-  const [articles, messages] = await Promise.all([
+  const [articles, messages, viewStats] = await Promise.all([
     listArticlesAdmin(),
     getRecentMessages(),
+    getPageViewStats(),
   ]);
 
   const published = articles.filter((a) => a.status === "published").length;
   const drafts = articles.length - published;
   const recentArticles = articles.slice(0, 5);
+  const maxDaily =
+    viewStats?.dailyLast7.reduce((m, d) => Math.max(m, d.views), 0) ?? 1;
 
   return (
     <div>
       <div className="admin-stat-grid">
         <div className="admin-stat-card">
+          <div className="admin-stat-label">Kunjungan Hari Ini</div>
+          <div className="admin-stat-value">
+            {viewStats?.today.toLocaleString("id-ID") ?? "—"}
+          </div>
+          <div className="admin-stat-hint">Page view publik</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">7 Hari Terakhir</div>
+          <div className="admin-stat-value">
+            {viewStats?.last7Days.toLocaleString("id-ID") ?? "—"}
+          </div>
+          <div className="admin-stat-hint">Total minggu ini</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-label">Total Kunjungan</div>
+          <div className="admin-stat-value">
+            {viewStats?.allTime.toLocaleString("id-ID") ?? "—"}
+          </div>
+          <div className="admin-stat-hint">Semua waktu</div>
+        </div>
+        <div className="admin-stat-card">
           <div className="admin-stat-label">Total Artikel</div>
           <div className="admin-stat-value">{articles.length}</div>
-          <div className="admin-stat-hint">Semua status</div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-label">Published</div>
-          <div className="admin-stat-value">{published}</div>
-          <div className="admin-stat-hint">Tampil ke pembaca publik</div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-label">Draft</div>
-          <div className="admin-stat-value">{drafts}</div>
-          <div className="admin-stat-hint">Masih disembunyikan</div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-label">Pesan Masuk</div>
-          <div className="admin-stat-value">{messages.length}</div>
-          <div className="admin-stat-hint">5 terbaru ditampilkan</div>
+          <div className="admin-stat-hint">
+            {published} publish · {drafts} draft
+          </div>
         </div>
       </div>
+
+      {viewStats && (
+        <div className="admin-section-grid" style={{ marginBottom: "1.5rem" }}>
+          <div className="admin-card">
+            <div className="admin-card-header">
+              <h3 className="admin-card-title">Kunjungan 7 Hari Terakhir</h3>
+            </div>
+            {viewStats.dailyLast7.length === 0 ? (
+              <div className="admin-empty">
+                <p>Belum ada data kunjungan. Buka website publik dulu ya.</p>
+              </div>
+            ) : (
+              <div className="admin-analytics-bars">
+                {viewStats.dailyLast7.map((d) => (
+                  <div key={d.day} className="admin-analytics-bar-row">
+                    <span className="admin-analytics-bar-label">{d.day}</span>
+                    <div className="admin-analytics-bar-track">
+                      <div
+                        className="admin-analytics-bar-fill"
+                        style={{
+                          width: `${Math.max(8, (d.views / maxDaily) * 100)}%`,
+                        }}
+                      />
+                    </div>
+                    <span className="admin-analytics-bar-value">{d.views}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="admin-card">
+            <div className="admin-card-header">
+              <h3 className="admin-card-title">Halaman Paling Dilihat</h3>
+            </div>
+            {viewStats.topPages.length === 0 ? (
+              <div className="admin-empty">
+                <p>Belum ada halaman yang tercatat.</p>
+              </div>
+            ) : (
+              <div className="admin-list">
+                {viewStats.topPages.map((p) => (
+                  <div key={p.path} className="admin-list-item">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        alignItems: "center",
+                      }}
+                    >
+                      <code style={{ fontSize: "0.85rem" }}>{p.path}</code>
+                      <span className="admin-badge admin-badge-published">
+                        {p.views} view
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="admin-section-grid">
         <div className="admin-card">
