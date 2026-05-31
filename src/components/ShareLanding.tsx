@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
+  getCleanShareUrl,
   getFacebookShareUrl,
   getShareMessage,
   getShareUrl,
@@ -18,16 +19,17 @@ const FEATURES = [
 ] as const;
 
 const CHANNELS: { id: ShareChannel; label: string; icon: string }[] = [
+  { id: "link", label: "Link saja", icon: "🔗" },
+  { id: "instagramCaption", label: "Caption IG", icon: "📸" },
+  { id: "instagramShort", label: "IG pendek", icon: "✨" },
   { id: "whatsapp", label: "WhatsApp", icon: "💬" },
   { id: "facebook", label: "Facebook", icon: "📘" },
   { id: "casual", label: "Chat santai", icon: "✌️" },
-  { id: "professional", label: "Formal", icon: "📋" },
-  { id: "instagram", label: "Instagram", icon: "📸" },
 ];
 
 export default function ShareLanding() {
   const [copied, setCopied] = useState<"link" | ShareChannel | null>(null);
-  const shareUrl = getShareUrl("landing");
+  const shareUrl = getCleanShareUrl();
 
   const copyText = async (text: string, key: "link" | ShareChannel) => {
     try {
@@ -99,7 +101,19 @@ export default function ShareLanding() {
         </div>
 
         <div className="share-divider">
-          <span>Pesan siap share ke temen</span>
+          <span>Caption & link siap copy</span>
+        </div>
+
+        <div className="share-link-box">
+          <p className="share-link-box-label">Link website (tempel di caption / bio IG)</p>
+          <code className="share-link-box-url">{shareUrl}</code>
+          <button
+            type="button"
+            className="share-btn-copy share-link-box-btn"
+            onClick={() => copyText(shareUrl, "link")}
+          >
+            {copied === "link" ? "✓ Link tersalin!" : "📋 Salin link"}
+          </button>
         </div>
 
         <div className="share-channel-grid">

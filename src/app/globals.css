@@ -1894,6 +1894,36 @@ button.gallery-item {
     text-decoration: underline;
 }
 
+.share-link-box {
+    background: var(--clr-bg-alt);
+    border: 1px solid rgba(27, 67, 50, 0.12);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.share-link-box-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.82rem;
+    color: var(--clr-text-muted);
+}
+
+.share-link-box-url {
+    display: block;
+    font-size: 0.78rem;
+    word-break: break-all;
+    padding: 0.65rem 0.75rem;
+    background: var(--clr-bg);
+    border-radius: 8px;
+    margin-bottom: 0.65rem;
+    color: var(--clr-primary-dark);
+}
+
+.share-link-box-btn {
+    width: 100%;
+}
+
 .share-channel-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

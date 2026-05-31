@@ -7,6 +7,11 @@ export function getShareUrl(utmSource = "share"): string {
   return `${base}${SHARE_PATH}?utm_source=${utmSource}&utm_medium=social`;
 }
 
+/** Link bersih tanpa UTM — untuk caption IG / bio */
+export function getCleanShareUrl(): string {
+  return `${getSiteUrl()}${SHARE_PATH}`;
+}
+
 export const SHARE_MESSAGES = {
   whatsapp: `Halo! 👋
 
@@ -49,6 +54,30 @@ Perkenalkan Santri Journey — website personal tentang kehidupan santri di Pond
 
 Yuk kepoin:
 ${getShareUrl("facebook")}`,
+
+  /** Link saja — untuk caption / bio / story sticker */
+  link: getCleanShareUrl(),
+
+  /** Caption lengkap Instagram (post / reel) */
+  instagramCaption: `Website Santri Journey-ku sudah live! 🕌✨
+
+Isinya cerita kehidupan santri di Pondok Pesantren Sukahideng:
+📖 Artikel & tips mondok buat pemula
+📸 Galeri foto pondok
+🕌 Jadwal sholat & peta lokasi
+
+Yuk kepoin 👇
+${getCleanShareUrl()}
+
+.
+.
+.
+#santri #pesantren #mondok #santrijourney #pondokpesantren #tasikmalaya #sukahideng #kehidupansantri #generasihebat`,
+
+  /** Caption pendek IG / bio link */
+  instagramShort: `Santri Journey 🕌 — cerita mondok, tips pemula, artikel & galeri pondok.
+
+👇 ${getCleanShareUrl()}`,
 } as const;
 
 export type ShareChannel = keyof typeof SHARE_MESSAGES;
