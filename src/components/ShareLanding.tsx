@@ -84,7 +84,7 @@ export default function ShareLanding() {
             (link di gambar tidak bisa diklik — itu normal di Status WA).
           </p>
           <a
-            href="/images/wa-status-v2.jpg"
+            href="/images/wa-status-v3.jpg"
             download="santri-journey-status-qr.jpg"
             className="share-status-download"
           >
@@ -92,8 +92,8 @@ export default function ShareLanding() {
           </a>
           <p className="share-status-note">
             Kalau masih gambar lama, buka link ini langsung:{" "}
-            <a href="/images/wa-status-v2.jpg" target="_blank" rel="noopener noreferrer">
-              wa-status-v2.jpg
+            <a href="/images/wa-status-v3.jpg" target="_blank" rel="noopener noreferrer">
+              wa-status-v3.jpg
             </a>
           </p>
         </div>
