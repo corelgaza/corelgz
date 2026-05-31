@@ -8,16 +8,28 @@ type NavItem = {
   label: string;
   icon: string;
   exact?: boolean;
+  badge?: number;
 };
 
-const NAV_ITEMS: ReadonlyArray<NavItem> = [
+const NAV_ITEMS: ReadonlyArray<Omit<NavItem, "badge">> = [
   { href: "/admin", label: "Dashboard", icon: "📊", exact: true },
   { href: "/admin/articles", label: "Artikel", icon: "📝" },
+  { href: "/admin/gallery", label: "Galeri", icon: "🖼️" },
   { href: "/admin/messages", label: "Pesan", icon: "💬" },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  unreadCount = 0,
+}: {
+  unreadCount?: number;
+}) {
   const pathname = usePathname();
+
+  const items: NavItem[] = NAV_ITEMS.map((item) =>
+    item.href === "/admin/messages" && unreadCount > 0
+      ? { ...item, badge: unreadCount }
+      : item
+  );
 
   return (
     <aside className="admin-sidebar">
@@ -30,7 +42,7 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="admin-sidebar-nav">
-        {NAV_ITEMS.map((item) => {
+        {items.map((item) => {
           const active = item.exact
             ? pathname === item.href
             : pathname?.startsWith(item.href);
@@ -42,6 +54,9 @@ export default function AdminSidebar() {
             >
               <span className="admin-sidebar-icon">{item.icon}</span>
               <span>{item.label}</span>
+              {item.badge ? (
+                <span className="admin-sidebar-badge">{item.badge}</span>
+              ) : null}
             </Link>
           );
         })}

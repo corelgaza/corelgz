@@ -8,6 +8,13 @@ export type PageViewStats = {
   dailyLast7: { day: string; views: number }[];
 };
 
+export type ArticleViewStat = {
+  slug: string;
+  title: string;
+  views: number;
+  status: string;
+};
+
 function startOfTodayJakarta(): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Jakarta",
@@ -87,4 +94,40 @@ export async function getPageViewStats(): Promise<PageViewStats | null> {
     topPages,
     dailyLast7,
   };
+}
+
+/** Hitung page view per slug artikel (/artikel/[slug]) */
+export async function getArticleViewCounts(): Promise<Record<string, number>> {
+  const supabase = createAdminClient();
+  if (!supabase) return {};
+
+  const { data } = await supabase
+    .from("page_views")
+    .select("path")
+    .like("path", "/artikel/%")
+    .limit(10000);
+
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) {
+    const slug = row.path.replace(/^\/artikel\//, "").split(/[?#]/)[0];
+    if (!slug || slug === "artikel") continue;
+    counts[slug] = (counts[slug] ?? 0) + 1;
+  }
+  return counts;
+}
+
+export async function getTopArticleViews(
+  articles: { slug: string; title: string; status: string }[],
+  limit = 5
+): Promise<ArticleViewStat[]> {
+  const counts = await getArticleViewCounts();
+  return articles
+    .map((a) => ({
+      slug: a.slug,
+      title: a.title,
+      status: a.status,
+      views: counts[a.slug] ?? 0,
+    }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, limit);
 }

@@ -1,11 +1,15 @@
 import Link from "next/link";
+import { getArticleViewCounts } from "@/lib/analytics";
 import { listArticlesAdmin } from "@/lib/articles";
 import ArticlesTable from "./ArticlesTable";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminArticlesPage() {
-  const articles = await listArticlesAdmin();
+  const [articles, viewCounts] = await Promise.all([
+    listArticlesAdmin(),
+    getArticleViewCounts(),
+  ]);
 
   return (
     <div>
@@ -24,7 +28,7 @@ export default async function AdminArticlesPage() {
         </div>
       </div>
 
-      <ArticlesTable initial={articles} />
+      <ArticlesTable initial={articles} viewCounts={viewCounts} />
     </div>
   );
 }

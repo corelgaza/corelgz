@@ -1,27 +1,9 @@
 import Link from "next/link";
-import { getPageViewStats } from "@/lib/analytics";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getPageViewStats, getTopArticleViews } from "@/lib/analytics";
 import { listArticlesAdmin } from "@/lib/articles";
+import { listContactMessages } from "@/lib/messages";
 
 export const dynamic = "force-dynamic";
-
-type RecentMessage = {
-  id: string;
-  name: string | null;
-  message: string;
-  created_at: string;
-};
-
-async function getRecentMessages(): Promise<RecentMessage[]> {
-  const supabase = createAdminClient();
-  if (!supabase) return [];
-  const { data } = await supabase
-    .from("contact_messages")
-    .select("id, name, message, created_at")
-    .order("created_at", { ascending: false })
-    .limit(5);
-  return data ?? [];
-}
 
 function formatDateShort(iso: string): string {
   try {
@@ -37,13 +19,17 @@ function formatDateShort(iso: string): string {
 export default async function AdminDashboardPage() {
   const [articles, messages, viewStats] = await Promise.all([
     listArticlesAdmin(),
-    getRecentMessages(),
+    listContactMessages(),
     getPageViewStats(),
   ]);
+
+  const topArticles = await getTopArticleViews(articles, 5);
+  const recentMessages = messages.slice(0, 5);
 
   const published = articles.filter((a) => a.status === "published").length;
   const drafts = articles.length - published;
   const recentArticles = articles.slice(0, 5);
+  const unreadMessages = messages.filter((m) => !m.is_read).length;
   const maxDaily =
     viewStats?.dailyLast7.reduce((m, d) => Math.max(m, d.views), 0) ?? 1;
 
@@ -143,6 +129,38 @@ export default async function AdminDashboardPage() {
         </div>
       )}
 
+      {topArticles.some((a) => a.views > 0) && (
+        <div className="admin-card" style={{ marginBottom: "1.5rem" }}>
+          <div className="admin-card-header">
+            <h3 className="admin-card-title">Artikel Paling Dibaca</h3>
+            <Link href="/admin/articles" className="admin-link">
+              Lihat semua
+            </Link>
+          </div>
+          <div className="admin-list">
+            {topArticles
+              .filter((a) => a.views > 0)
+              .map((a) => (
+                <div key={a.slug} className="admin-list-item">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ fontSize: "0.95rem" }}>{a.title}</span>
+                    <span className="admin-badge admin-badge-published">
+                      {a.views} view
+                    </span>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
       <div className="admin-section-grid">
         <div className="admin-card">
           <div className="admin-card-header">
@@ -195,19 +213,30 @@ export default async function AdminDashboardPage() {
             <h3 className="admin-card-title">Pesan Terbaru</h3>
             <Link href="/admin/messages" className="admin-link">
               Lihat semua
+              {unreadMessages > 0 && (
+                <span className="admin-unread-pill" style={{ marginLeft: 8 }}>
+                  {unreadMessages} baru
+                </span>
+              )}
             </Link>
           </div>
-          {messages.length === 0 ? (
+          {recentMessages.length === 0 ? (
             <div className="admin-empty">
               <p>Belum ada pesan masuk dari pengunjung.</p>
             </div>
           ) : (
             <div className="admin-list">
-              {messages.map((m) => (
-                <div key={m.id} className="admin-list-item">
+              {recentMessages.map((m) => (
+                <div
+                  key={m.id}
+                  className={`admin-list-item${m.is_read ? "" : " is-unread-item"}`}
+                >
                   <div className="admin-list-item-time">
                     {formatDateShort(m.created_at)} ·{" "}
                     <strong>{m.name ?? "Anon"}</strong>
+                    {!m.is_read && (
+                      <span className="admin-unread-dot" aria-label="Belum dibaca" />
+                    )}
                   </div>
                   <p
                     style={{

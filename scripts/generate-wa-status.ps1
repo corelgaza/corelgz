@@ -106,7 +106,7 @@ $g.DrawString("Buka websitenya di sini", $fontQrHint, (New-Object System.Drawing
   (New-Object System.Drawing.RectangleF 60, 1165, 960, 42), $sf)
 
 # SCAN badge pill
-$badgeW = 220
+$badgeW = 260
 $badgeH = 44
 $badgeX = [int](($w - $badgeW) / 2)
 $badgeY = 1218

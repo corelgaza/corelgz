@@ -1211,3 +1211,188 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Gallery admin
+   ============================================================ */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.admin-form-field-full {
+  grid-column: 1 / -1;
+}
+
+.admin-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.admin-gallery-card {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  overflow: hidden;
+  box-shadow: var(--admin-shadow);
+}
+
+.admin-gallery-card.is-hidden {
+  opacity: 0.72;
+}
+
+.admin-gallery-thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #f3f4f6;
+}
+
+.admin-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-gallery-hidden-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
+.admin-gallery-caption {
+  margin: 0;
+  padding: 0.75rem 0.85rem 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.admin-gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0.75rem 0.85rem 0.85rem;
+}
+
+.admin-gallery-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem;
+}
+
+/* ============================================================
+   Messages admin
+   ============================================================ */
+.admin-message-card.is-unread {
+  border-left: 3px solid var(--admin-gold);
+}
+
+.admin-message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.admin-message-id {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  font-family: ui-monospace, monospace;
+}
+
+.admin-message-body {
+  margin: 0 0 0.75rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.admin-message-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--admin-text-muted);
+}
+
+.admin-message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-unread-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--admin-primary-soft);
+  color: var(--admin-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.admin-unread-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--admin-gold);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.admin-list-item.is-unread-item {
+  background: rgba(184, 134, 11, 0.06);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  margin: -0.25rem -0.35rem;
+}
+
+.admin-sidebar-badge {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    margin-left: 0;
+  }
+
+  .admin-sidebar-link {
+    position: relative;
+  }
+}

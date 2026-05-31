@@ -43,6 +43,10 @@ export async function POST(request: Request) {
     );
   }
 
+  const url = new URL(request.url);
+  const folderParam = url.searchParams.get("folder");
+  const folder = folderParam === "gallery" ? "gallery" : "covers";
+
   const file = formData.get("file");
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "File hilang" }, { status: 400 });
@@ -87,7 +91,7 @@ export async function POST(request: Request) {
   const ext = extFromType(file.type);
   const ts = Date.now().toString(36);
   const rand = Math.random().toString(36).slice(2, 8);
-  const path = `covers/${ts}-${rand}.${ext}`;
+  const path = `${folder}/${ts}-${rand}.${ext}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
 

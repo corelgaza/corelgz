@@ -8,6 +8,7 @@ const TITLE_MAP: Record<string, string> = {
   "/admin/articles": "Daftar Artikel",
   "/admin/articles/new": "Artikel Baru",
   "/admin/messages": "Pesan Pengunjung",
+  "/admin/gallery": "Kelola Galeri",
 };
 
 function getTitle(pathname: string | null): string {
@@ -18,6 +19,7 @@ function getTitle(pathname: string | null): string {
   }
   if (pathname.startsWith("/admin/articles")) return "Daftar Artikel";
   if (pathname.startsWith("/admin/messages")) return "Pesan Pengunjung";
+  if (pathname.startsWith("/admin/gallery")) return "Kelola Galeri";
   return "Admin";
 }
 

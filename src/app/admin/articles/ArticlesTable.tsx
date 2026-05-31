@@ -20,8 +20,10 @@ function formatDate(iso: string | null): string {
 
 export default function ArticlesTable({
   initial,
+  viewCounts = {},
 }: {
   initial: ArticleSummary[];
+  viewCounts?: Record<string, number>;
 }) {
   const router = useRouter();
   const toast = useToast();
@@ -141,6 +143,7 @@ export default function ArticlesTable({
               <tr>
                 <th>Judul</th>
                 <th>Status</th>
+                <th>Views</th>
                 <th>Tags</th>
                 <th>Diperbarui</th>
                 <th style={{ width: 1 }}>Aksi</th>
@@ -174,6 +177,11 @@ export default function ArticlesTable({
                       }`}
                     >
                       {a.status}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="admin-badge admin-badge-published">
+                      {(viewCounts[a.slug] ?? 0).toLocaleString("id-ID")}
                     </span>
                   </td>
                   <td>

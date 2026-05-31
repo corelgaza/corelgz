@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
+import { getUnreadMessageCount } from "@/lib/messages";
 import "./admin.css";
 
 export const metadata: Metadata = {
@@ -7,10 +8,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminShell>{children}</AdminShell>;
+  const unreadCount = await getUnreadMessageCount();
+
+  return <AdminShell unreadCount={unreadCount}>{children}</AdminShell>;
 }

@@ -7,8 +7,10 @@ import { ToastProvider } from "./Toast";
 
 export default function AdminShell({
   children,
+  unreadCount = 0,
 }: {
   children: React.ReactNode;
+  unreadCount?: number;
 }) {
   const pathname = usePathname();
 
@@ -19,7 +21,7 @@ export default function AdminShell({
   return (
     <ToastProvider>
       <div className="admin-root">
-        <AdminSidebar />
+        <AdminSidebar unreadCount={unreadCount} />
         <div className="admin-main">
           <AdminHeader />
           <main className="admin-content">{children}</main>

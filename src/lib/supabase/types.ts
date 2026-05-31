@@ -18,6 +18,7 @@ export type Database = {
           message: string;
           visitor_id: string | null;
           ip_address: string | null;
+          is_read: boolean;
           created_at: string;
         };
         Insert: {
@@ -26,6 +27,7 @@ export type Database = {
           message: string;
           visitor_id?: string | null;
           ip_address?: string | null;
+          is_read?: boolean;
           created_at?: string;
         };
         Update: {
@@ -34,6 +36,7 @@ export type Database = {
           message?: string;
           visitor_id?: string | null;
           ip_address?: string | null;
+          is_read?: boolean;
           created_at?: string;
         };
         Relationships: [];

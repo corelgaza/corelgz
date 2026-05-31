@@ -5,9 +5,11 @@ import { useRef, useState } from "react";
 export default function CoverImageField({
   value,
   onChange,
+  uploadFolder = "covers",
 }: {
   value: string;
   onChange: (url: string) => void;
+  uploadFolder?: "covers" | "gallery";
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -19,10 +21,15 @@ export default function CoverImageField({
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/admin/upload", {
+      const res = await fetch(
+        uploadFolder === "gallery"
+          ? "/api/admin/upload?folder=gallery"
+          : "/api/admin/upload",
+        {
         method: "POST",
         body: fd,
-      });
+      }
+      );
       const raw = await res.text();
       let data: { error?: string; url?: string } = {};
       try {
