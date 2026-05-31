@@ -2,7 +2,7 @@ Add-Type -AssemblyName System.Drawing
 
 $w = 1080
 $h = 1920
-$out = Join-Path $PSScriptRoot "..\public\images\wa-status.jpg"
+$out = Join-Path $PSScriptRoot "..\public\images\wa-status-v2.jpg"
 $coverPath = Join-Path $PSScriptRoot "..\public\images\cover-hidup-di-pesantren.png"
 $shareUrl = "https://corelgz.hwstudio.id/share"
 $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=$([uri]::EscapeDataString($shareUrl))"

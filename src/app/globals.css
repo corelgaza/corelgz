@@ -1882,6 +1882,18 @@ button.gallery-item {
     filter: brightness(1.08);
 }
 
+.share-status-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.78rem;
+    color: var(--clr-text-muted);
+    line-height: 1.5;
+}
+
+.share-status-note a {
+    color: var(--clr-primary);
+    text-decoration: underline;
+}
+
 .share-channel-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
