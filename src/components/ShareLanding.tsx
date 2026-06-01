@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
+  getArtikelUrl,
   getCleanShareUrl,
   getFacebookShareUrl,
+  getHomeUrl,
   getShareMessage,
   getShareUrl,
   type ShareChannel,
@@ -12,14 +14,23 @@ import {
 import { getWhatsAppUrl } from "@/lib/config";
 
 const FEATURES = [
-  "Cerita kehidupan santri",
-  "Artikel & tips mondok",
+  "5 artikel tips & cerita mondok",
+  "Checklist santri baru & kangen rumah",
   "Galeri foto pondok",
-  "Jadwal sholat & lokasi",
+  "Jadwal sholat & peta lokasi",
+] as const;
+
+const QUICK_LINKS = [
+  { id: "share", label: "Halaman share", getUrl: getCleanShareUrl },
+  { id: "home", label: "Homepage", getUrl: getHomeUrl },
+  { id: "artikel", label: "Semua artikel", getUrl: getArtikelUrl },
 ] as const;
 
 const CHANNELS: { id: ShareChannel; label: string; icon: string }[] = [
   { id: "link", label: "Link saja", icon: "🔗" },
+  { id: "update", label: "Update 5 artikel", icon: "🆕" },
+  { id: "grupSantri", label: "Grup santri", icon: "👥" },
+  { id: "rekomendasiArtikel", label: "Rekomendasi baca", icon: "📚" },
   { id: "instagramCaption", label: "Caption IG", icon: "📸" },
   { id: "instagramShort", label: "IG pendek", icon: "✨" },
   { id: "whatsapp", label: "WhatsApp", icon: "💬" },
@@ -28,10 +39,15 @@ const CHANNELS: { id: ShareChannel; label: string; icon: string }[] = [
 ];
 
 export default function ShareLanding() {
-  const [copied, setCopied] = useState<"link" | ShareChannel | null>(null);
+  const [copied, setCopied] = useState<
+    "link" | ShareChannel | "share" | "home" | "artikel" | null
+  >(null);
   const shareUrl = getCleanShareUrl();
 
-  const copyText = async (text: string, key: "link" | ShareChannel) => {
+  const copyText = async (
+    text: string,
+    key: "link" | ShareChannel | "share" | "home" | "artikel"
+  ) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(key);
@@ -51,8 +67,8 @@ export default function ShareLanding() {
           <span>Pondok Pesantren Sukahideng</span>
         </h1>
         <p className="share-lead">
-          Website personal yang isinya cerita mondok, tips untuk santri baru,
-          artikel, galeri, jadwal sholat, dan peta lokasi pondok — dibangun
+          Website personal yang isinya <strong>5 artikel</strong> mondok, tips
+          santri baru, galeri, jadwal sholat, dan peta lokasi pondok — dibangun
           dengan ❤️ oleh Corel.
         </p>
 
@@ -101,7 +117,27 @@ export default function ShareLanding() {
         </div>
 
         <div className="share-divider">
-          <span>Caption & link siap copy</span>
+          <span>Link cepat (siap copy)</span>
+        </div>
+
+        <div className="share-quick-links">
+          {QUICK_LINKS.map((item) => (
+            <div key={item.id} className="share-quick-link-item">
+              <span className="share-quick-link-label">{item.label}</span>
+              <code className="share-quick-link-url">{item.getUrl()}</code>
+              <button
+                type="button"
+                className="share-btn-copy share-quick-link-btn"
+                onClick={() => copyText(item.getUrl(), item.id)}
+              >
+                {copied === item.id ? "✓ Tersalin!" : "Salin"}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="share-divider">
+          <span>Caption & pesan siap copy</span>
         </div>
 
         <div className="share-link-box">

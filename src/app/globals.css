@@ -1894,6 +1894,44 @@ button.gallery-item {
     text-decoration: underline;
 }
 
+.share-quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.share-quick-link-item {
+    background: var(--clr-bg-alt);
+    border: 1px solid rgba(27, 67, 50, 0.12);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+}
+
+.share-quick-link-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--clr-primary-dark);
+    margin-bottom: 0.35rem;
+}
+
+.share-quick-link-url {
+    display: block;
+    font-size: 0.75rem;
+    word-break: break-all;
+    padding: 0.5rem 0.65rem;
+    background: var(--clr-bg);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    color: var(--clr-text-muted);
+}
+
+.share-quick-link-btn {
+    width: 100%;
+    font-size: 0.85rem;
+}
+
 .share-link-box {
     background: var(--clr-bg-alt);
     border: 1px solid rgba(27, 67, 50, 0.12);
