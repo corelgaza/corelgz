@@ -29,11 +29,48 @@ export const FEATURED_ARTICLES = [
   {
     slug: "checklist-santri-baru-barang-wajib-mental-yang-harus-siap",
     label: "Checklist Santri Baru",
+    cover: "/images/cover-checklist-santri-baru.png",
   },
   {
     slug: "kangen-rumah-pas-baru-mondok-normal-banget-ini-cara-kuat-adaptasi",
     label: "Kangen Rumah? Normal Banget",
+    cover: "/images/cover-kangen-rumah-santri-baru.png",
   },
+] as const;
+
+/** Artikel untuk showcase di halaman /share */
+export const SHOWCASE_ARTICLES = [
+  {
+    slug: "hidup-di-pesantren-itu-gimana-sih-cerita-singkat-buat-yang-baru-penasaran",
+    title: "Hidup di Pesantren Gimana?",
+    cover: "/images/cover-hidup-di-pesantren.png",
+  },
+  {
+    slug: "10-tips-biar-betah-mondok-buat-santri-baru-versi-santai-tapi-kepake",
+    title: "10 Tips Biar Betah Mondok",
+    cover: "/images/cover-tips-betah.png",
+  },
+  {
+    slug: "sehari-di-pesantren-dari-subuh-sampai-tidur-versi-santai-buat-pemula",
+    title: "Sehari di Pesantren",
+    cover: "/images/cover-rutinitas-harian.png",
+  },
+  {
+    slug: "checklist-santri-baru-barang-wajib-mental-yang-harus-siap",
+    title: "Checklist Santri Baru",
+    cover: "/images/cover-checklist-santri-baru.png",
+  },
+  {
+    slug: "kangen-rumah-pas-baru-mondok-normal-banget-ini-cara-kuat-adaptasi",
+    title: "Kangen Rumah? Normal Banget",
+    cover: "/images/cover-kangen-rumah-santri-baru.png",
+  },
+] as const;
+
+export const GALLERY_PREVIEW = [
+  { src: "/images/pondok1.webp", alt: "Ngaji bareng" },
+  { src: "/images/pondok2.jpeg", alt: "Asrama pondok" },
+  { src: "/images/gedung.jpg", alt: "Halaman asrama" },
 ] as const;
 
 export const SHARE_MESSAGES = {
