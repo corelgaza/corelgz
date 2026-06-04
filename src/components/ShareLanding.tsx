@@ -159,13 +159,13 @@ export default function ShareLanding() {
 
           <div className="share-wa-preview">
             <a
-              href="/images/wa-status-v3.jpg"
+              href="/images/wa-status-v4.jpg"
               target="_blank"
               rel="noopener noreferrer"
               className="share-wa-preview-img-wrap"
             >
               <Image
-                src="/images/wa-status-v3.jpg"
+                src="/images/wa-status-v4.jpg"
                 alt="Preview gambar status WhatsApp Santri Journey"
                 width={180}
                 height={320}
@@ -178,8 +178,8 @@ export default function ShareLanding() {
                 <strong>scan QR code</strong> untuk buka website.
               </p>
               <a
-                href="/images/wa-status-v3.jpg"
-                download="santri-journey-status-qr.jpg"
+              href="/images/wa-status-v4.jpg"
+              download="santri-journey-status-v4.jpg"
                 className="share-status-download"
               >
                 📥 Download Status WA

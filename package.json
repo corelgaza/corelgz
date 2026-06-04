@@ -11,7 +11,8 @@
     "db:migrate:articles": "node scripts/apply-migration.mjs supabase/migrations/add_articles.sql",
     "db:migrate:storage": "node scripts/apply-migration.mjs supabase/migrations/add_storage_bucket.sql",
     "db:migrate:analytics": "node scripts/apply-migration.mjs supabase/migrations/add_page_views.sql",
-    "db:migrate:messages": "node scripts/apply-migration.mjs supabase/migrations/add_contact_read_status.sql"
+    "db:migrate:messages": "node scripts/apply-migration.mjs supabase/migrations/add_contact_read_status.sql",
+    "generate:wa-status": "powershell -ExecutionPolicy Bypass -File scripts/generate-wa-status.ps1"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",

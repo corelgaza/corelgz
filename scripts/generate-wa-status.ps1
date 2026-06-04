@@ -16,31 +16,55 @@ function Draw-RoundedRect($g, [System.Drawing.Rectangle]$rect, [int]$radius, $br
   $path.Dispose()
 }
 
+function Draw-RoundedImage($g, [string]$path, [System.Drawing.Rectangle]$rect, [int]$radius) {
+  if (-not (Test-Path $path)) { return }
+  $img = [System.Drawing.Image]::FromFile($path)
+  if ($radius -le 0) {
+    $g.DrawImage($img, $rect)
+    $img.Dispose()
+    return
+  }
+  $clip = New-Object System.Drawing.Drawing2D.GraphicsPath
+  Add-RoundedRectPath $clip $rect $radius
+  $state = $g.Save()
+  $g.SetClip($clip)
+  $g.DrawImage($img, $rect)
+  $g.Restore($state)
+  $clip.Dispose()
+  $img.Dispose()
+}
+
 function Draw-ScanCorners($g, [int]$x, [int]$y, [int]$size, $color, [int]$len = 36, [int]$thick = 5) {
   $pen = New-Object System.Drawing.Pen($color, $thick)
   $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
   $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
-  # top-left
   $g.DrawLine($pen, $x, $y + $len, $x, $y)
   $g.DrawLine($pen, $x, $y, $x + $len, $y)
-  # top-right
   $g.DrawLine($pen, $x + $size - $len, $y, $x + $size, $y)
   $g.DrawLine($pen, $x + $size, $y, $x + $size, $y + $len)
-  # bottom-left
   $g.DrawLine($pen, $x, $y + $size - $len, $x, $y + $size)
   $g.DrawLine($pen, $x, $y + $size, $x + $len, $y + $size)
-  # bottom-right
   $g.DrawLine($pen, $x + $size - $len, $y + $size, $x + $size, $y + $size)
   $g.DrawLine($pen, $x + $size, $y + $size - $len, $x + $size, $y + $size)
   $pen.Dispose()
 }
 
+$root = Join-Path $PSScriptRoot "..\public\images"
 $w = 1080
 $h = 1920
-$out = Join-Path $PSScriptRoot "..\public\images\wa-status-v3.jpg"
-$coverPath = Join-Path $PSScriptRoot "..\public\images\cover-hidup-di-pesantren.png"
+$out = Join-Path $root "wa-status-v4.jpg"
 $shareUrl = "https://corelgz.hwstudio.id/share"
 $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=12&ecc=M&color=1B4332&bgcolor=FFFFFF&format=png&data=$([uri]::EscapeDataString($shareUrl))"
+
+$heroCover = Join-Path $root "cover-komunikasi-ortu.png"
+$articleCovers = @(
+  (Join-Path $root "cover-hidup-di-pesantren.png"),
+  (Join-Path $root "cover-tips-betah.png"),
+  (Join-Path $root "cover-rutinitas-harian.png"),
+  (Join-Path $root "cover-checklist-santri-baru.png"),
+  (Join-Path $root "cover-kangen-rumah-santri-baru.png"),
+  (Join-Path $root "cover-komunikasi-ortu.png")
+)
 
 $bmp = New-Object System.Drawing.Bitmap $w, $h
 $g = [System.Drawing.Graphics]::FromImage($bmp)
@@ -59,108 +83,156 @@ $white = [System.Drawing.Color]::White
 $gold = [System.Drawing.Color]::FromArgb(184, 134, 11)
 $mint = [System.Drawing.Color]::FromArgb(216, 243, 220)
 
-$fontBadge = New-Object System.Drawing.Font("Segoe UI", 28, [System.Drawing.FontStyle]::Bold)
-$fontTitle = New-Object System.Drawing.Font("Segoe UI", 52, [System.Drawing.FontStyle]::Bold)
-$fontSub = New-Object System.Drawing.Font("Segoe UI", 28, [System.Drawing.FontStyle]::Regular)
-$fontFeat = New-Object System.Drawing.Font("Segoe UI", 24, [System.Drawing.FontStyle]::Regular)
-$fontUrl = New-Object System.Drawing.Font("Segoe UI", 26, [System.Drawing.FontStyle]::Bold)
-$fontSmall = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Regular)
-$fontQrHint = New-Object System.Drawing.Font("Segoe UI", 28, [System.Drawing.FontStyle]::Bold)
-$fontScanBadge = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Bold)
+$fontBadge = New-Object System.Drawing.Font("Segoe UI", 24, [System.Drawing.FontStyle]::Bold)
+$fontTitle = New-Object System.Drawing.Font("Segoe UI", 46, [System.Drawing.FontStyle]::Bold)
+$fontSub = New-Object System.Drawing.Font("Segoe UI", 26, [System.Drawing.FontStyle]::Regular)
+$fontStat = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
+$fontFeat = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Regular)
+$fontUrl = New-Object System.Drawing.Font("Segoe UI", 24, [System.Drawing.FontStyle]::Bold)
+$fontSmall = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Regular)
+$fontQrHint = New-Object System.Drawing.Font("Segoe UI", 26, [System.Drawing.FontStyle]::Bold)
+$fontScanBadge = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
+$fontArtikelLabel = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Bold)
 
 $sf = New-Object System.Drawing.StringFormat
 $sf.Alignment = [System.Drawing.StringAlignment]::Center
 $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
 
+# Hero image full-width top
+$heroRect = New-Object System.Drawing.Rectangle 0, 0, $w, 820
+Draw-RoundedImage $g $heroCover $heroRect 0
+
+# Dark gradient overlay on hero
+$overlayRect = [System.Drawing.Rectangle]::new(0, 0, $w, 820)
+$overlayBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush $overlayRect, `
+  ([System.Drawing.Color]::FromArgb(200, 15, 40, 30)), `
+  ([System.Drawing.Color]::FromArgb(20, 15, 40, 30)), 90
+$g.FillRectangle($overlayBrush, 0, 0, $w, 820)
+$overlayBrush.Dispose()
+
+# Header on hero
+Draw-RoundedRect $g ([System.Drawing.Rectangle]::new(340, 70, 400, 44)) 22 (
+  New-Object System.Drawing.SolidBrush $gold
+)
+$g.DrawString("6 ARTIKEL BARU", $fontBadge, (New-Object System.Drawing.SolidBrush $white),
+  (New-Object System.Drawing.RectangleF 340, 70, 400, 44), $sf)
+
 $g.DrawString("SANTRI JOURNEY", $fontBadge, (New-Object System.Drawing.SolidBrush $mint),
-  (New-Object System.Drawing.RectangleF 80, 100, 920, 50), $sf)
+  (New-Object System.Drawing.RectangleF 80, 130, 920, 40), $sf)
 $g.DrawString("Kehidupan Santri di", $fontSub, (New-Object System.Drawing.SolidBrush $white),
-  (New-Object System.Drawing.RectangleF 60, 170, 960, 40), $sf)
+  (New-Object System.Drawing.RectangleF 60, 175, 960, 36), $sf)
 $g.DrawString("Pesantren Sukahideng", $fontTitle, (New-Object System.Drawing.SolidBrush $white),
-  (New-Object System.Drawing.RectangleF 40, 210, 1000, 140), $sf)
+  (New-Object System.Drawing.RectangleF 40, 210, 1000, 120), $sf)
 
-$cover = [System.Drawing.Image]::FromFile($coverPath)
-$imgRect = New-Object System.Drawing.Rectangle 90, 360, 900, 600
-$path = New-Object System.Drawing.Drawing2D.GraphicsPath
-Add-RoundedRectPath $path $imgRect 28
-$g.SetClip($path)
-$g.DrawImage($cover, $imgRect)
-$g.ResetClip()
-$path.Dispose()
-$cover.Dispose()
+# Article cover grid (3 x 2)
+$gridY = 860
+$g.DrawString("6 Artikel · Tips Mondok · Cerita Santri", $fontArtikelLabel,
+  (New-Object System.Drawing.SolidBrush $mint),
+  (New-Object System.Drawing.RectangleF 60, $gridY, 960, 36), $sf)
 
-$features = @("Cerita & tips mondok", "Artikel & galeri pondok", "Jadwal sholat & peta lokasi")
-$y = 990
-foreach ($f in $features) {
-  $g.FillEllipse((New-Object System.Drawing.SolidBrush $gold), 130, $y + 6, 12, 12)
-  $g.DrawString($f, $fontFeat, (New-Object System.Drawing.SolidBrush $white), 160, $y)
-  $y += 46
+$thumbW = 310
+$thumbH = 195
+$gapX = 20
+$gapY = 16
+$startX = [int](($w - (3 * $thumbW + 2 * $gapX)) / 2)
+$startY = $gridY + 50
+
+for ($i = 0; $i -lt $articleCovers.Count; $i++) {
+  $col = $i % 3
+  $row = [math]::Floor($i / 3)
+  $x = $startX + $col * ($thumbW + $gapX)
+  $y = $startY + $row * ($thumbH + $gapY)
+  $rect = New-Object System.Drawing.Rectangle $x, $y, $thumbW, $thumbH
+
+  $shadow = New-Object System.Drawing.Rectangle ($x + 4), ($y + 5), $thumbW, $thumbH
+  Draw-RoundedRect $g $shadow 16 (
+    New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(70, 0, 0, 0))
+  )
+  Draw-RoundedImage $g $articleCovers[$i] $rect 16
+
+  $borderPen = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(60, 255, 255, 255)), 2
+  $borderPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+  Add-RoundedRectPath $borderPath $rect 16
+  $g.DrawPath($borderPen, $borderPath)
+  $borderPen.Dispose()
+  $borderPath.Dispose()
 }
 
-# Divider line
+# Stats pills
+$statsY = $startY + 2 * ($thumbH + $gapY) + 24
+$pills = @("6 Artikel", "Galeri Foto", "Jadwal Sholat")
+$pillW = 280
+$pillH = 42
+$pillGap = 16
+$pillStartX = [int](($w - (3 * $pillW + 2 * $pillGap)) / 2)
+for ($i = 0; $i -lt $pills.Count; $i++) {
+  $px = $pillStartX + $i * ($pillW + $pillGap)
+  Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($px, $statsY, $pillW, $pillH)) 21 (
+    New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(45, 255, 255, 255))
+  )
+  $g.DrawString($pills[$i], $fontStat, (New-Object System.Drawing.SolidBrush $white),
+    (New-Object System.Drawing.RectangleF $px, $statsY, $pillW, $pillH), $sf)
+}
+
+# Divider
+$divY = $statsY + 70
 $linePen = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(80, 255, 255, 255)), 1
-$g.DrawLine($linePen, 180, 1145, 900, 1145)
+$g.DrawLine($linePen, 160, $divY, 920, $divY)
 $linePen.Dispose()
 
-$g.DrawString("Buka websitenya di sini", $fontQrHint, (New-Object System.Drawing.SolidBrush $mint),
-  (New-Object System.Drawing.RectangleF 60, 1165, 960, 42), $sf)
+$g.DrawString("Scan QR buat buka websitenya", $fontQrHint, (New-Object System.Drawing.SolidBrush $mint),
+  (New-Object System.Drawing.RectangleF 60, ($divY + 12), 960, 40), $sf)
 
-# SCAN badge pill
+# SCAN badge
 $badgeW = 260
-$badgeH = 44
+$badgeH = 40
 $badgeX = [int](($w - $badgeW) / 2)
-$badgeY = 1218
-Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($badgeX, $badgeY, $badgeW, $badgeH)) 22 (
+$badgeY = $divY + 58
+Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($badgeX, $badgeY, $badgeW, $badgeH)) 20 (
   New-Object System.Drawing.SolidBrush $gold
 )
 $g.DrawString("SCAN QR CODE", $fontScanBadge, (New-Object System.Drawing.SolidBrush $white),
   (New-Object System.Drawing.RectangleF $badgeX, $badgeY, $badgeW, $badgeH), $sf)
 
-# QR card with shadow
-$cardSize = 400
+# QR card
+$cardSize = 360
 $cardX = [int](($w - $cardSize) / 2)
-$cardY = 1280
-$shadowRect = New-Object System.Drawing.Rectangle ($cardX + 6), ($cardY + 8), $cardSize, $cardSize
-Draw-RoundedRect $g $shadowRect 28 (
+$cardY = $badgeY + 56
+$shadowRect = New-Object System.Drawing.Rectangle ($cardX + 5), ($cardY + 7), $cardSize, $cardSize
+Draw-RoundedRect $g $shadowRect 24 (
   New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(90, 0, 0, 0))
 )
-Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($cardX, $cardY, $cardSize, $cardSize)) 28 (
+Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($cardX, $cardY, $cardSize, $cardSize)) 24 (
   New-Object System.Drawing.SolidBrush $white
 )
-
-$borderPen = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(40, 27, 67, 50)), 2
-$borderPath = New-Object System.Drawing.Drawing2D.GraphicsPath
-Add-RoundedRectPath $borderPath ([System.Drawing.Rectangle]::new($cardX, $cardY, $cardSize, $cardSize)) 28
-$g.DrawPath($borderPen, $borderPath)
-$borderPen.Dispose()
-$borderPath.Dispose()
 
 $qrBytes = (New-Object System.Net.WebClient).DownloadData($qrUrl)
 $ms = New-Object System.IO.MemoryStream(,$qrBytes)
 $qr = [System.Drawing.Image]::FromStream($ms)
-$qrSize = 320
+$qrSize = 290
 $qrX = $cardX + [int](($cardSize - $qrSize) / 2)
 $qrY = $cardY + [int](($cardSize - $qrSize) / 2)
 $g.DrawImage($qr, $qrX, $qrY, $qrSize, $qrSize)
-Draw-ScanCorners $g ($qrX - 8) ($qrY - 8) ($qrSize + 16) $gold 40 6
+Draw-ScanCorners $g ($qrX - 6) ($qrY - 6) ($qrSize + 12) $gold 36 5
 $qr.Dispose()
 $ms.Dispose()
 
 # URL pill
-$urlPillW = 720
-$urlPillH = 56
+$urlPillW = 700
+$urlPillH = 52
 $urlPillX = [int](($w - $urlPillW) / 2)
-$urlPillY = 1710
+$urlPillY = $cardY + $cardSize + 36
 Draw-RoundedRect $g ([System.Drawing.Rectangle]::new($urlPillX, $urlPillY, $urlPillW, $urlPillH)) 14 (
-  New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(35, 255, 255, 255))
+  New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(40, 255, 255, 255))
 )
 $g.DrawString("corelgz.hwstudio.id/share", $fontUrl, (New-Object System.Drawing.SolidBrush $white),
   (New-Object System.Drawing.RectangleF $urlPillX, $urlPillY, $urlPillW, $urlPillH), $sf)
 
-$g.DrawString("Pondok Pesantren Sukahideng - Tasikmalaya", $fontSmall, (New-Object System.Drawing.SolidBrush $mint),
-  (New-Object System.Drawing.RectangleF 60, 1790, 960, 35), $sf)
-$g.DrawString("by Corel", $fontSmall, (New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(180, 255, 255, 255))),
-  (New-Object System.Drawing.RectangleF 60, 1845, 960, 35), $sf)
+$g.DrawString("Pondok Pesantren Sukahideng · Tasikmalaya", $fontSmall, (New-Object System.Drawing.SolidBrush $mint),
+  (New-Object System.Drawing.RectangleF 60, ($urlPillY + 62), 960, 32), $sf)
+$g.DrawString("by Corel · Santri Journey", $fontSmall,
+  (New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(180, 255, 255, 255))),
+  (New-Object System.Drawing.RectangleF 60, ($urlPillY + 98), 960, 32), $sf)
 
 $bmp.Save($out, [System.Drawing.Imaging.ImageFormat]::Jpeg)
 $g.Dispose()
